@@ -1,9 +1,9 @@
 import Panel from "./Panel";
+import PanelActions from "./PanelActions";
 
 /**
  * this component will be the main layout of the application,
  * containing the map and the panels for polygons, objects, and map data (as table).
- * @returns JSX.Element
  */
 export default function Layout() {
   return (
@@ -13,11 +13,11 @@ export default function Layout() {
         <div>Map Area</div>
 
         <div>
-          <Panel title="Polygons">
+          <Panel title="Polygons" actions={<PanelActions />}>
             <div>Polygon placement and editing tools will go here.</div>
           </Panel>
 
-          <Panel title="Objects">
+          <Panel title="Objects" actions={<PanelActions />}>
             <div>Object placement and editing tools will go here.</div>
           </Panel>
 
