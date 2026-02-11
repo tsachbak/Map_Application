@@ -1,3 +1,4 @@
+import { useState } from "react";
 import MapDataTablePlaceholder from "./MapDataTablePlaceholder";
 import Panel from "./Panel";
 import PanelActions from "./PanelActions";
@@ -9,12 +10,48 @@ import "./Layout.css";
  * containing the map and the panels for polygons, objects, and map data (as table).
  */
 export default function Layout() {
+  const [isAddingObject, setIsAddingObject] = useState(false);
+  const [savedObjects, setSavedObjects] = useState([]);
+  const [draftObjects, setDraftObjects] = useState([]);
+
+  function createId() {
+    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  }
+
+  function handleMapClick(lat, lng) {
+    if (!isAddingObject) return;
+
+    const newDraftObject = {
+      id: createId(),
+      lat,
+      lng,
+    };
+
+    setDraftObjects((prev) => [...prev, newDraftObject]);
+  }
+
+  function handleSaveObjects() {
+    if (draftObjects.length === 0) return;
+
+    setSavedObjects((prev) => [...prev, ...draftObjects]);
+    setDraftObjects([]);
+    setIsAddingObject(false);
+  }
+
+  function handleToggleAddObject() {
+    setIsAddingObject((prev) => !prev);
+  }
+
   return (
     <div>
       <h1>Map Application</h1>
       <div className="layout-root">
         <div className="layout-map">
-          <MapView />
+          <MapView
+            savedObjects={savedObjects}
+            draftObjects={draftObjects}
+            onMapClick={handleMapClick}
+          />
         </div>
 
         <div className="layout-side">
@@ -22,7 +59,18 @@ export default function Layout() {
             <div>Polygon placement and editing tools will go here.</div>
           </Panel>
 
-          <Panel title="Objects" actions={<PanelActions />}>
+          <Panel
+            title="Objects"
+            actions={
+              <PanelActions
+                addActive={isAddingObject}
+                onAddClick={handleToggleAddObject}
+                onSaveClick={handleSaveObjects}
+                addLabelOff="Add"
+                addLabelOn="Stop"
+              />
+            }
+          >
             <div>Object placement and editing tools will go here.</div>
           </Panel>
 
