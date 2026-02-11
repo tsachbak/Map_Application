@@ -1,7 +1,7 @@
 import MapDataTablePlaceholder from "./MapDataTablePlaceholder";
-import MapPlaceholder from "./MapPlaceholder";
 import Panel from "./Panel";
 import PanelActions from "./PanelActions";
+import MapView from "./MapView";
 import "./Layout.css";
 
 /**
@@ -14,7 +14,7 @@ export default function Layout() {
       <h1>Map Application</h1>
       <div className="layout-root">
         <div className="layout-map">
-          <MapPlaceholder />
+          <MapView />
         </div>
 
         <div className="layout-side">
