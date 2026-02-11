@@ -13,8 +13,21 @@ client/coverage
 client/build
 
 # Server
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 
+# Rider / VS / VSCode
+.vs/
+.idea/
+*.swp
 
+# Logs
+*.log
 
 # misc
 .DS_Store
