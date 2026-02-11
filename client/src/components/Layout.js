@@ -2,6 +2,7 @@ import MapDataTablePlaceholder from "./MapDataTablePlaceholder";
 import MapPlaceholder from "./MapPlaceholder";
 import Panel from "./Panel";
 import PanelActions from "./PanelActions";
+import "./Layout.css";
 
 /**
  * this component will be the main layout of the application,
@@ -11,10 +12,12 @@ export default function Layout() {
   return (
     <div>
       <h1>Map Application</h1>
-      <div>
-        <MapPlaceholder />
+      <div className="layout-root">
+        <div className="layout-map">
+          <MapPlaceholder />
+        </div>
 
-        <div>
+        <div className="layout-side">
           <Panel title="Polygons" actions={<PanelActions />}>
             <div>Polygon placement and editing tools will go here.</div>
           </Panel>

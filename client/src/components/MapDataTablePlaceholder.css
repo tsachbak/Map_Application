@@ -1,0 +1,15 @@
+.map-data-table-placeholder {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.map-data-table-placeholder th,
+.map-data-table-placeholder td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.map-data-table-placeholder thead {
+  background-color: #f5f5f5;
+}

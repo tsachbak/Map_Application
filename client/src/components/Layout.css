@@ -1,0 +1,19 @@
+.layout-root {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+}
+
+.layout-map {
+  flex: 1;
+  min-height: 600px;
+  border: 1px solid #ccc;
+  padding: 12px;
+}
+
+.layout-side {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

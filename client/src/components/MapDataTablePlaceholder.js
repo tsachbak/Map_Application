@@ -1,9 +1,11 @@
+import "./MapDataTablePlaceholder.css";
+
 /***
  * MapDataTablePlaceholder.js
  */
 export default function MapDataTablePlaceholder() {
   return (
-    <table>
+    <table className="map-data-table-placeholder">
       <thead>
         <tr>
           <th>Object</th>
