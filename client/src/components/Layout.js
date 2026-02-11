@@ -1,3 +1,4 @@
+import MapDataTablePlaceholder from "./MapDataTablePlaceholder";
 import MapPlaceholder from "./MapPlaceholder";
 import Panel from "./Panel";
 import PanelActions from "./PanelActions";
@@ -23,7 +24,7 @@ export default function Layout() {
           </Panel>
 
           <Panel title="Map Data">
-            <div>Map data table will go here.</div>
+            <MapDataTablePlaceholder />
           </Panel>
         </div>
       </div>
