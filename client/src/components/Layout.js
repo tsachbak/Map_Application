@@ -1,3 +1,4 @@
+import MapPlaceholder from "./MapPlaceholder";
 import Panel from "./Panel";
 import PanelActions from "./PanelActions";
 
@@ -10,7 +11,7 @@ export default function Layout() {
     <div>
       <h1>Map Application</h1>
       <div>
-        <div>Map Area</div>
+        <MapPlaceholder />
 
         <div>
           <Panel title="Polygons" actions={<PanelActions />}>
