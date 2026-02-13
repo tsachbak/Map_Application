@@ -1,4 +1,5 @@
-﻿using server.Dtos.Objects;
+﻿using MongoDB.Driver;
+using server.Dtos.Objects;
 using server.Models;
 
 namespace server.Services.ObjectsService
@@ -32,6 +33,15 @@ namespace server.Services.ObjectsService
 
             await _mongoDbService.ObjectsCollection.InsertManyAsync(entities, cancellationToken: ct);
             return entities.Count;
+        }
+
+        public async Task<IReadOnlyList<MapObjectEntity>> GetAllObjectsAsync(CancellationToken ct = default)
+        {
+            var objects = await _mongoDbService.ObjectsCollection
+                .Find(Builders<MapObjectEntity>.Filter.Empty)
+                .ToListAsync(ct);
+
+            return objects;
         }
     }
 }

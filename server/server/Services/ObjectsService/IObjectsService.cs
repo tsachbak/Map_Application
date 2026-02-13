@@ -1,4 +1,5 @@
 ﻿using server.Dtos.Objects;
+using server.Models;
 
 namespace server.Services.ObjectsService
 {
@@ -11,5 +12,10 @@ namespace server.Services.ObjectsService
         /// Saves a list of Map Objects to the database and returns the count of saved objects.
         /// </summary>
         Task<int> SaveObjectsAsync(SaveObjectsRequestDto request, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gets all Map Objects from the database.
+        /// </summary>
+        Task<IReadOnlyList<MapObjectEntity>> GetAllObjectsAsync(CancellationToken ct = default);
     }
 }

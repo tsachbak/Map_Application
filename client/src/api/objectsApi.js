@@ -1,9 +1,7 @@
-import { post } from "./httpClient";
+import { get, post } from "./httpClient";
 
 /**
  * Saves the provided draft objects to the backend.
- * @param {*} draftObjects
- * @returns
  */
 export function saveObjects(draftObjects) {
   const payload = {
@@ -16,4 +14,11 @@ export function saveObjects(draftObjects) {
   };
 
   return post("/objects/save", payload);
+}
+
+/**
+ * Fetches the saved objects from the backend.
+ */
+export function getObjects() {
+  return get("/objects");
 }

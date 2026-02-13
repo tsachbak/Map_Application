@@ -19,6 +19,13 @@ namespace server.Controllers
             _objectsService = objectsService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll(CancellationToken ct)
+        {
+            var objects = await _objectsService.GetAllObjectsAsync(ct);
+            return Ok(objects);
+        }
+
         [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] SaveObjectsRequestDto request, CancellationToken ct)
         {

@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MapDataTablePlaceholder from "./MapDataTablePlaceholder";
 import Panel from "./Panel";
 import PanelActions from "./PanelActions";
 import MapView from "./MapView";
 import "./Layout.css";
 
-import { saveObjects } from "../api/objectsApi";
+import { getObjects, saveObjects } from "../api/objectsApi";
 
 /**
  * this component will be the main layout of the application,
@@ -19,6 +19,35 @@ export default function Layout() {
   function createId() {
     return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
   }
+
+  async function loadObjects() {
+    try {
+      const data = await getObjects();
+
+      const mapped = (data ?? [])
+        .map((o) => {
+          const coords = o?.location?.coordinates;
+
+          if (!Array.isArray(coords) || coords.length < 2) return null;
+
+          return {
+            id: o.object ?? o._id,
+            lat: coords[1],
+            lng: coords[0],
+            type: o.type ?? "marker",
+          };
+        })
+        .filter(Boolean);
+
+      setSavedObjects(mapped);
+    } catch (error) {
+      console.error("[Layout] failed to load objects:", error);
+    }
+  }
+
+  useEffect(() => {
+    loadObjects();
+  }, []);
 
   function handleMapClick(lat, lng) {
     if (!isAddingObject) return;
@@ -38,6 +67,8 @@ export default function Layout() {
     try {
       const response = await saveObjects(draftObjects);
       console.log("[Layout] server response:", response);
+
+      await loadObjects();
 
       setDraftObjects([]);
       setIsAddingObject(false);
