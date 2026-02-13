@@ -1,4 +1,4 @@
-import { get, post } from "./httpClient";
+import { get, post, del } from "./httpClient";
 
 /**
  * Saves the provided draft objects to the backend.
@@ -21,4 +21,11 @@ export function saveObjects(draftObjects) {
  */
 export function getObjects() {
   return get("/objects");
+}
+
+/**
+ * Deletes the object with the specified ID from the backend.
+ */
+export function deleteObject(id) {
+  return del(`/objects/${id}`);
 }

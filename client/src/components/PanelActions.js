@@ -7,6 +7,8 @@ export default function PanelActions({
   addActive,
   onAddClick,
   onSaveClick,
+  onDeleteClick,
+  deleteDisabled = false,
   addLabelOff = "Add",
   addLabelOn = "Stop Adding",
 }) {
@@ -30,7 +32,12 @@ export default function PanelActions({
       >
         Save
       </button>
-      <button type="button" className="panel-actions-button">
+      <button
+        type="button"
+        className="panel-actions-button"
+        onClick={onDeleteClick}
+        disabled={!onDeleteClick || deleteDisabled}
+      >
         Delete
       </button>
     </div>

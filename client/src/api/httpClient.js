@@ -52,5 +52,10 @@ export async function del(path) {
     );
   }
 
+  if (response.status === 204) return null;
+
+  const contentType = response.headers.get("Content-Type") ?? "";
+  if (!contentType.includes("application/json")) return null;
+
   return response.json();
 }

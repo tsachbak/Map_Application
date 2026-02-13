@@ -5,7 +5,7 @@ import PanelActions from "./PanelActions";
 import MapView from "./MapView";
 import "./Layout.css";
 
-import { getObjects, saveObjects } from "../api/objectsApi";
+import { getObjects, saveObjects, deleteObject } from "../api/objectsApi";
 
 /**
  * this component will be the main layout of the application,
@@ -15,7 +15,6 @@ export default function Layout() {
   const [isAddingObject, setIsAddingObject] = useState(false);
   const [savedObjects, setSavedObjects] = useState([]);
   const [draftObjects, setDraftObjects] = useState([]);
-  const [selectedSavedObjectId, setSelectedSavedObjectId] = useState(null);
   const [selectedSavedObject, setSelectedSavedObject] = useState(null);
 
   function createId() {
@@ -87,6 +86,20 @@ export default function Layout() {
     setIsAddingObject((prev) => !prev);
   }
 
+  async function handleDeleteSelectedObject() {
+    if (!selectedSavedObject?.id) return;
+
+    try {
+      await deleteObject(selectedSavedObject.id);
+
+      await loadObjects();
+      setSelectedSavedObject(null);
+    } catch (error) {
+      console.error("[Layout] failed to delete object:", error);
+      alert(error.message);
+    }
+  }
+
   return (
     <div>
       <h1>Map Application</h1>
@@ -114,6 +127,8 @@ export default function Layout() {
                 addActive={isAddingObject}
                 onAddClick={handleToggleAddObject}
                 onSaveClick={handleSaveObjects}
+                onDeleteClick={handleDeleteSelectedObject}
+                deleteDisabled={!selectedSavedObject?.id}
                 addLabelOff="Add"
                 addLabelOn="Stop"
               />
