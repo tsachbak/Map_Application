@@ -26,19 +26,17 @@ export default function Layout() {
 
       const mapped = (data ?? [])
         .map((o) => {
-          const coords = o?.location?.coordinates;
-
-          if (!Array.isArray(coords) || coords.length < 2) return null;
+          if (!o?.id) return null;
 
           return {
-            id: o.object ?? o._id,
-            lat: coords[1],
-            lng: coords[0],
+            id: o.id,
+            Object: o.object ?? "",
+            lat: o.latitude,
+            lng: o.longitude,
             type: o.type ?? "marker",
           };
         })
         .filter(Boolean);
-
       setSavedObjects(mapped);
     } catch (error) {
       console.error("[Layout] failed to load objects:", error);

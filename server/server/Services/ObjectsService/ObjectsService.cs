@@ -43,5 +43,16 @@ namespace server.Services.ObjectsService
 
             return objects;
         }
+
+        public async Task<bool> DeleteObjectAsync(string id, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return false; // Invalid ID
+
+            var filter = Builders<MapObjectEntity>.Filter.Eq(o => o.Id, id);
+
+            var result = await _mongoDbService.ObjectsCollection.DeleteOneAsync(filter, ct);
+            return result.DeletedCount > 0;
+        }
     }
 }

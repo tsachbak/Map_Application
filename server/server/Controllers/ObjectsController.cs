@@ -23,7 +23,17 @@ namespace server.Controllers
         public async Task<IActionResult> GetAll(CancellationToken ct)
         {
             var objects = await _objectsService.GetAllObjectsAsync(ct);
-            return Ok(objects);
+
+            var dtos = objects.Select(o => new GetObjectResponseDto
+            {
+                Id = o.Id,
+                Object = o.Object,
+                Type = o.Type,
+                Latitude = o.Location.Coordinates[1],
+                Longitude = o.Location.Coordinates[0]
+            }).ToList();
+
+            return Ok(dtos);
         }
 
         [HttpPost("save")]
@@ -39,6 +49,17 @@ namespace server.Controllers
                 Count = savedCount,
                 Objects = request.Objects
             });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id, CancellationToken ct)
+        {
+            var deleted = await _objectsService.DeleteObjectAsync(id, ct);
+
+            if (!deleted)
+                return NotFound($"Object with ID '{id}' not found.");
+
+            return NoContent();
         }
     }
 }
