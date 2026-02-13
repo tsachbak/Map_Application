@@ -5,6 +5,8 @@ import PanelActions from "./PanelActions";
 import MapView from "./MapView";
 import "./Layout.css";
 
+import { saveObjects } from "../api/objectsApi";
+
 /**
  * this component will be the main layout of the application,
  * containing the map and the panels for polygons, objects, and map data (as table).
@@ -30,12 +32,19 @@ export default function Layout() {
     setDraftObjects((prev) => [...prev, newDraftObject]);
   }
 
-  function handleSaveObjects() {
+  async function handleSaveObjects() {
     if (draftObjects.length === 0) return;
 
-    setSavedObjects((prev) => [...prev, ...draftObjects]);
-    setDraftObjects([]);
-    setIsAddingObject(false);
+    try {
+      const response = await saveObjects(draftObjects);
+      console.log("[Layout] server response:", response);
+
+      setDraftObjects([]);
+      setIsAddingObject(false);
+    } catch (error) {
+      console.error("[Layout] failed to save objects:", error);
+      alert(error.message);
+    }
   }
 
   function handleToggleAddObject() {
