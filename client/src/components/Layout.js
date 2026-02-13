@@ -15,6 +15,8 @@ export default function Layout() {
   const [isAddingObject, setIsAddingObject] = useState(false);
   const [savedObjects, setSavedObjects] = useState([]);
   const [draftObjects, setDraftObjects] = useState([]);
+  const [selectedSavedObjectId, setSelectedSavedObjectId] = useState(null);
+  const [selectedSavedObject, setSelectedSavedObject] = useState(null);
 
   function createId() {
     return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -76,6 +78,11 @@ export default function Layout() {
     }
   }
 
+  function handleSavedMarkerClick(objectId) {
+    const selectedObject = savedObjects.find((o) => o.id === objectId) ?? null;
+    setSelectedSavedObject(selectedObject);
+  }
+
   function handleToggleAddObject() {
     setIsAddingObject((prev) => !prev);
   }
@@ -89,6 +96,9 @@ export default function Layout() {
             savedObjects={savedObjects}
             draftObjects={draftObjects}
             onMapClick={handleMapClick}
+            onSavedMarkerClick={handleSavedMarkerClick}
+            selectedSavedObject={selectedSavedObject}
+            selectedSavedObjectId={selectedSavedObject?.id ?? null}
           />
         </div>
 
@@ -109,7 +119,22 @@ export default function Layout() {
               />
             }
           >
-            <div>Object placement and editing tools will go here.</div>
+            <div>
+              {selectedSavedObject ? (
+                <div>
+                  <div>
+                    <strong>Selected Object</strong>
+                  </div>
+                  <div>ID: {selectedSavedObject.id}</div>
+                  <div>Object: {selectedSavedObject.object || "-"}</div>
+                  <div>Latitude: {selectedSavedObject.lat}</div>
+                  <div>Longitude: {selectedSavedObject.lng}</div>
+                  <div>Type: {selectedSavedObject.type}</div>
+                </div>
+              ) : (
+                <div>No object selected</div>
+              )}
+            </div>
           </Panel>
 
           <Panel title="Map Data">

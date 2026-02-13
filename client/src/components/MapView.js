@@ -20,6 +20,8 @@ export default function MapView({
   savedObjects = [],
   draftObjects = [],
   onMapClick,
+  onSavedMarkerClick,
+  selectedSavedObjectId,
 }) {
   const draftIcon = new L.Icon({
     iconUrl:
@@ -56,7 +58,16 @@ export default function MapView({
       <MapClickHandler />
 
       {savedObjects.map((obj) => (
-        <Marker key={obj.id} position={[obj.lat, obj.lng]} />
+        <Marker
+          key={obj.id}
+          position={[obj.lat, obj.lng]}
+          eventHandlers={{
+            click: () => {
+              if (!onSavedMarkerClick) return;
+              onSavedMarkerClick(obj.id);
+            },
+          }}
+        />
       ))}
 
       {draftObjects.map((obj) => (
