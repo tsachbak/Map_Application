@@ -1,4 +1,5 @@
 
+using server.Services.ObjectsService;
 using server.Settings;
 
 namespace server
@@ -32,6 +33,9 @@ namespace server
                         .AllowAnyMethod();
                 });
             });
+
+            builder.Services.AddSingleton<Services.MongoDbService>();
+            builder.Services.AddScoped<IObjectsService, ObjectsService>();
 
             var app = builder.Build();
 

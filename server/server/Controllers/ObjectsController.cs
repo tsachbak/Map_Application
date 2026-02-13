@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.Objects;
+using server.Services.ObjectsService;
 
 namespace server.Controllers
 {
@@ -11,16 +12,26 @@ namespace server.Controllers
     [ApiController]
     public class ObjectsController : ControllerBase
     {
-        [HttpPost("save")]
-        public IActionResult Save([FromBody] SaveObjectsRequestDto request)
-        {
-            var response = new SaveObjectsResponseDto
-            {
-                Count = request.Objects.Count,
-                Objects = request.Objects
-            };
+        private readonly IObjectsService _objectsService;
 
-            return Ok(response);
+        public ObjectsController(IObjectsService objectsService)
+        {
+            _objectsService = objectsService;
+        }
+
+        [HttpPost("save")]
+        public async Task<IActionResult> Save([FromBody] SaveObjectsRequestDto request, CancellationToken ct)
+        {
+            var savedCount = await _objectsService.SaveObjectsAsync(request, ct);
+
+            if (savedCount == 0)
+                return BadRequest("No objects to save.");
+
+            return Ok(new SaveObjectsResponseDto
+            {
+                Count = savedCount,
+                Objects = request.Objects
+            });
         }
     }
 }

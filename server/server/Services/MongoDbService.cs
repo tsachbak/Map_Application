@@ -7,18 +7,46 @@ namespace server.Services
 {
     /// <summary>
     /// Mongo DB Service.
+    /// Establishes a connection to the MongoDB database and provides access to the collections used by the application.
     /// </summary>
     public sealed class MongoDbService
     {
         private readonly IMongoDatabase _database;
-        public IMongoCollection<MapObjectEntity> Objects { get; }
+        public IMongoCollection<MapObjectEntity> ObjectsCollection { get; }
 
         public MongoDbService(IOptions<MongoSettings> mongoSettings)
         {
             var client = new MongoClient(mongoSettings.Value.ConnectionString);
+            var cfg = mongoSettings.Value;
+
+            if (string.IsNullOrWhiteSpace(cfg.ConnectionString))
+                throw new ArgumentException("MongoDB connection string is not configured.");
+
+            if (string.IsNullOrWhiteSpace(cfg.DatabaseName))
+                throw new ArgumentException("MongoDB database name is not configured.");
+
             _database = client.GetDatabase(mongoSettings.Value.DatabaseName);
 
-            Objects = _database.GetCollection<MapObjectEntity>("objects");
+            ObjectsCollection = _database.GetCollection<MapObjectEntity>("objects");
+            EnsureGeoIndexes();
+        }
+
+        // Ensure that the geospatial index on the Location field is created when the service is initialized
+        private void EnsureGeoIndexes()
+        {
+            try
+            {
+                var geoIndex = new CreateIndexModel<MapObjectEntity>(
+                    Builders<MapObjectEntity>.IndexKeys.Geo2DSphere(o => o.Location),
+                    new CreateIndexOptions { Name = "ix_objects_location_2dsphere" });
+
+                ObjectsCollection.Indexes.CreateOne(geoIndex);
+            }
+            catch (MongoCommandException ex)
+            {
+                if (!ex.Message.Contains("already exists", StringComparison.OrdinalIgnoreCase))
+                    throw; // Rethrow if it's a different error
+            }
         }
     }
 }
