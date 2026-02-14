@@ -3,6 +3,7 @@ import {
   TileLayer,
   Marker,
   Polyline,
+  Polygon,
   useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
@@ -29,6 +30,8 @@ export default function MapView({
   onMapClick,
   onSavedMarkerClick,
   selectedSavedObjectId,
+  isPolygonClosed = false,
+  onClosePolygon,
 }) {
   const draftIcon = new L.Icon({
     iconUrl:
@@ -74,17 +77,36 @@ export default function MapView({
       <MapClickHandler />
 
       {Array.isArray(draftPolygonPoints)
-        ? draftPolygonPoints.map((p, idx) => (
-            <Marker
-              key={`vertex-${idx}`}
-              position={[p.lat, p.lng]}
-              icon={vertexIcon}
-            />
-          ))
+        ? draftPolygonPoints.map((p, idx) => {
+            const isFirst = idx === 0;
+            const canClose =
+              isFirst && !isPolygonClosed && draftPolygonPoints.length >= 3;
+
+            return (
+              <Marker
+                key={`vertex-${idx}`}
+                position={[p.lat, p.lng]}
+                icon={vertexIcon}
+                eventHandlers={
+                  canClose
+                    ? {
+                        click: () => {
+                          if (onClosePolygon) onClosePolygon();
+                        },
+                      }
+                    : undefined
+                }
+              />
+            );
+          })
         : null}
 
       {Array.isArray(draftPolygonPoints) && draftPolygonPoints.length >= 2 ? (
-        <Polyline positions={draftPolygonPoints.map((p) => [p.lat, p.lng])} />
+        isPolygonClosed ? (
+          <Polygon positions={draftPolygonPoints.map((p) => [p.lat, p.lng])} />
+        ) : (
+          <Polyline positions={draftPolygonPoints.map((p) => [p.lat, p.lng])} />
+        )
       ) : null}
 
       {savedObjects.map((obj) => (

@@ -21,6 +21,7 @@ export default function Layout() {
   //states for managing Polygon
   const [isDrawingPolygon, setIsDrawingPolygon] = useState(false);
   const [draftPolygonPoints, setDraftPolygonPoints] = useState([]);
+  const [isPolygonClosed, setIsPolygonClosed] = useState(false);
 
   function createId() {
     return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -112,6 +113,7 @@ export default function Layout() {
   }
 
   function handleToggleDrawPolygon() {
+    setIsPolygonClosed(false);
     setIsDrawingPolygon((prev) => {
       const next = !prev;
 
@@ -128,6 +130,13 @@ export default function Layout() {
 
       return next;
     });
+  }
+
+  function handleClosePolygon() {
+    if (draftPolygonPoints.length < 3) return;
+
+    setIsPolygonClosed(true);
+    setIsDrawingPolygon(false);
   }
 
   async function handleDeleteSelectedObject() {
@@ -157,6 +166,8 @@ export default function Layout() {
             onSavedMarkerClick={handleSavedMarkerClick}
             selectedSavedObject={selectedSavedObject}
             selectedSavedObjectId={selectedSavedObject?.id ?? null}
+            isPolygonClosed={isPolygonClosed}
+            onClosePolygon={handleClosePolygon}
           />
         </div>
 
