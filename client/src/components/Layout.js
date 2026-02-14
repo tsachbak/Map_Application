@@ -1,4 +1,3 @@
-import { useState } from "react";
 import MapDataTablePlaceholder from "./MapDataTablePlaceholder";
 import Panel from "./Panel";
 import PanelActions from "./PanelActions";
@@ -6,23 +5,19 @@ import MapView from "./MapView";
 import "./Layout.css";
 
 import useObjects from "../features/objects/useObjects";
+import usePolygons from "../features/polygons/usePolygons";
 
 /**
  * this component will be the main layout of the application,
  * containing the map and the panels for polygons, objects, and map data (as table).
  */
 export default function Layout() {
-  //states for managing Polygon
-  const [isDrawingPolygon, setIsDrawingPolygon] = useState(false);
-  const [draftPolygonPoints, setDraftPolygonPoints] = useState([]);
-  const [isPolygonClosed, setIsPolygonClosed] = useState(false);
-
-  // useObjects hook manages the state and operations related to map objects.
   const objects = useObjects();
+  const polygons = usePolygons();
 
   function handleMapClick(lat, lng) {
-    if (isDrawingPolygon) {
-      setDraftPolygonPoints((prev) => [...prev, { lat, lng }]);
+    if (polygons.isDrawingPolygon) {
+      polygons.addPoint(lat, lng);
       return;
     }
 
@@ -30,32 +25,6 @@ export default function Layout() {
       objects.addDraftObject(lat, lng);
     }
     return;
-  }
-
-  function handleToggleDrawPolygon() {
-    setIsPolygonClosed(false);
-    setIsDrawingPolygon((prev) => {
-      const next = !prev;
-
-      if (next) {
-        objects.stopAddMode();
-        objects.setSelectedSavedObject(null);
-        setDraftPolygonPoints([]);
-      }
-
-      if (!next) {
-        setDraftPolygonPoints([]);
-      }
-
-      return next;
-    });
-  }
-
-  function handleClosePolygon() {
-    if (draftPolygonPoints.length < 3) return;
-
-    setIsPolygonClosed(true);
-    setIsDrawingPolygon(false);
   }
 
   return (
@@ -66,13 +35,13 @@ export default function Layout() {
           <MapView
             savedObjects={objects.savedObjects}
             draftObjects={objects.draftObjects}
-            draftPolygonPoints={draftPolygonPoints}
+            draftPolygonPoints={polygons.draftPolygonPoints}
             onMapClick={handleMapClick}
             onSavedMarkerClick={objects.selectSavedObjectById}
             selectedSavedObject={objects.selectedSavedObject}
             selectedSavedObjectId={objects.selectedSavedObject?.id ?? null}
-            isPolygonClosed={isPolygonClosed}
-            onClosePolygon={handleClosePolygon}
+            isPolygonClosed={polygons.isPolygonClosed}
+            onClosePolygon={polygons.closePolygon}
           />
         </div>
 
@@ -81,8 +50,16 @@ export default function Layout() {
             title="Polygons"
             actions={
               <PanelActions
-                addActive={isDrawingPolygon}
-                onAddClick={handleToggleDrawPolygon}
+                addActive={polygons.isDrawingPolygon}
+                onAddClick={() => {
+                  if (!polygons.isDrawingPolygon) {
+                    objects.stopAddMode();
+                    objects.setSelectedSavedObject(null);
+                    polygons.startDrawMode();
+                    return;
+                  }
+                  polygons.stopDrawMode();
+                }}
                 onSaveClick={null}
                 onDeleteClick={null}
                 addLabelOff="Add"
@@ -91,12 +68,12 @@ export default function Layout() {
             }
           >
             <div>
-              {isDrawingPolygon ? (
+              {polygons.isDrawingPolygon ? (
                 <div>
                   <div>
                     <strong>Drawing Polygon</strong>
                   </div>
-                  <div>Points: {draftPolygonPoints.length}</div>
+                  <div>Points: {polygons.draftPolygonPoints.length}</div>
                 </div>
               ) : (
                 <div>Click Add to start drawing a polygon.</div>
@@ -109,7 +86,12 @@ export default function Layout() {
             actions={
               <PanelActions
                 addActive={objects.isAddingObject}
-                onAddClick={objects.toggleAddMode}
+                onAddClick={() => {
+                  if (!objects.isAddingObject) {
+                    polygons.stopDrawMode();
+                  }
+                  objects.toggleAddMode();
+                }}
                 onSaveClick={objects.saveDraftObjectsAsync}
                 onDeleteClick={() =>
                   objects.deleteObjectByIdAsync(objects.selectedSavedObject?.id)
