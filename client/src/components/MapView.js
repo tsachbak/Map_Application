@@ -39,6 +39,15 @@ export default function MapView({
     iconAnchor: [12, 41],
   });
 
+  const vertexIcon = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    iconSize: [18, 30],
+    iconAnchor: [9, 30],
+  });
+
   function MapClickHandler() {
     useMapEvents({
       click(e) {
@@ -63,6 +72,16 @@ export default function MapView({
       />
 
       <MapClickHandler />
+
+      {Array.isArray(draftPolygonPoints)
+        ? draftPolygonPoints.map((p, idx) => (
+            <Marker
+              key={`vertex-${idx}`}
+              position={[p.lat, p.lng]}
+              icon={vertexIcon}
+            />
+          ))
+        : null}
 
       {Array.isArray(draftPolygonPoints) && draftPolygonPoints.length >= 2 ? (
         <Polyline positions={draftPolygonPoints.map((p) => [p.lat, p.lng])} />
