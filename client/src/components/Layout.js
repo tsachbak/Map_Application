@@ -12,10 +12,15 @@ import { getObjects, saveObjects, deleteObject } from "../api/objectsApi";
  * containing the map and the panels for polygons, objects, and map data (as table).
  */
 export default function Layout() {
+  //states for managing Objects
   const [isAddingObject, setIsAddingObject] = useState(false);
   const [savedObjects, setSavedObjects] = useState([]);
   const [draftObjects, setDraftObjects] = useState([]);
   const [selectedSavedObject, setSelectedSavedObject] = useState(null);
+
+  //states for managing Polygon
+  const [isDrawingPolygon, setIsDrawingPolygon] = useState(false);
+  const [draftPolygonPoints, setDraftPolygonPoints] = useState([]);
 
   function createId() {
     return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -49,18 +54,25 @@ export default function Layout() {
   }, []);
 
   function handleMapClick(lat, lng) {
-    if (!isAddingObject) return;
+    if (isDrawingPolygon) {
+      setDraftPolygonPoints((prev) => [...prev, { lat, lng }]);
+      return;
+    }
 
-    const newDraftObject = {
-      id: createId(),
-      lat,
-      lng,
-    };
+    if (isAddingObject) {
+      const newDraftObject = {
+        id: createId(),
+        lat,
+        lng,
+      };
 
-    setDraftObjects((prev) => [...prev, newDraftObject]);
+      setDraftObjects((prev) => [...prev, newDraftObject]);
+    }
+    return;
   }
 
   async function handleSaveObjects() {
+    if (isDrawingPolygon) return;
     if (draftObjects.length === 0) return;
 
     try {
@@ -83,7 +95,39 @@ export default function Layout() {
   }
 
   function handleToggleAddObject() {
-    setIsAddingObject((prev) => !prev);
+    setIsAddingObject((prev) => {
+      const next = !prev;
+
+      if (next) {
+        setIsDrawingPolygon(false);
+        setDraftPolygonPoints([]);
+      }
+
+      if (!next) {
+        setDraftObjects([]);
+      }
+
+      return next;
+    });
+  }
+
+  function handleToggleDrawPolygon() {
+    setIsDrawingPolygon((prev) => {
+      const next = !prev;
+
+      if (next) {
+        setIsAddingObject(false);
+        setDraftObjects([]);
+        setSelectedSavedObject(null);
+        setDraftPolygonPoints([]);
+      }
+
+      if (!next) {
+        setDraftPolygonPoints([]);
+      }
+
+      return next;
+    });
   }
 
   async function handleDeleteSelectedObject() {
@@ -108,6 +152,7 @@ export default function Layout() {
           <MapView
             savedObjects={savedObjects}
             draftObjects={draftObjects}
+            draftPolygonPoints={draftPolygonPoints}
             onMapClick={handleMapClick}
             onSavedMarkerClick={handleSavedMarkerClick}
             selectedSavedObject={selectedSavedObject}
@@ -116,8 +161,31 @@ export default function Layout() {
         </div>
 
         <div className="layout-side">
-          <Panel title="Polygons" actions={<PanelActions />}>
-            <div>Polygon placement and editing tools will go here.</div>
+          <Panel
+            title="Polygons"
+            actions={
+              <PanelActions
+                addActive={isDrawingPolygon}
+                onAddClick={handleToggleDrawPolygon}
+                onSaveClick={null}
+                onDeleteClick={null}
+                addLabelOff="Add"
+                addLabelOn="Stop"
+              />
+            }
+          >
+            <div>
+              {isDrawingPolygon ? (
+                <div>
+                  <div>
+                    <strong>Drawing Polygon</strong>
+                  </div>
+                  <div>Points: {draftPolygonPoints.length}</div>
+                </div>
+              ) : (
+                <div>Click Add to start drawing a polygon.</div>
+              )}
+            </div>
           </Panel>
 
           <Panel

@@ -1,4 +1,10 @@
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  useMapEvents,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
@@ -19,6 +25,7 @@ L.Icon.Default.mergeOptions({
 export default function MapView({
   savedObjects = [],
   draftObjects = [],
+  draftPolygonPoints = [],
   onMapClick,
   onSavedMarkerClick,
   selectedSavedObjectId,
@@ -56,6 +63,10 @@ export default function MapView({
       />
 
       <MapClickHandler />
+
+      {Array.isArray(draftPolygonPoints) && draftPolygonPoints.length >= 2 ? (
+        <Polyline positions={draftPolygonPoints.map((p) => [p.lat, p.lng])} />
+      ) : null}
 
       {savedObjects.map((obj) => (
         <Marker
