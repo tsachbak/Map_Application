@@ -43,6 +43,8 @@ export default function Layout() {
             isPolygonClosed={polygons.isPolygonClosed}
             onClosePolygon={polygons.closePolygon}
             savedPolygons={polygons.savedPolygons}
+            onSavedPolygonClick={polygons.selectSavedPolygonById}
+            selectedSavedPolygonId={polygons.selectedSavedPolygon?.id ?? null}
           />
         </div>
 

@@ -9,6 +9,7 @@ export default function usePolygons() {
   const [draftPolygonPoints, setDraftPolygonPoints] = useState([]);
   const [isPolygonClosed, setIsPolygonClosed] = useState(false);
   const [savedPolygons, setSavedPolygons] = useState([]);
+  const [selectedSavedPolygon, setSelectedSavedPolygon] = useState(null);
 
   // Toggles the draw mode for polygons.
   function toggleDrawMode() {
@@ -102,6 +103,12 @@ export default function usePolygons() {
     }
   }
 
+  // Selects a saved polygon by its ID and updates the selected state.
+  function selectSavedPolygonById(id) {
+    const polygon = savedPolygons.find((p) => p.id === id) ?? null;
+    setSelectedSavedPolygon(polygon);
+  }
+
   useEffect(() => {
     loadPolygons();
   }, []);
@@ -111,6 +118,7 @@ export default function usePolygons() {
     draftPolygonPoints,
     isPolygonClosed,
     savedPolygons,
+    selectedSavedPolygon,
     toggleDrawMode,
     addPoint,
     closePolygon,
@@ -119,5 +127,6 @@ export default function usePolygons() {
     stopDrawMode,
     saveClosedPolygonAsync,
     loadPolygons,
+    selectSavedPolygonById,
   };
 }

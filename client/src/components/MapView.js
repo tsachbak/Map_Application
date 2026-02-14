@@ -31,9 +31,10 @@ export default function MapView({
   draftPolygonPoints = [],
   onMapClick,
   onSavedMarkerClick,
-  selectedSavedObjectId,
   isPolygonClosed = false,
   onClosePolygon,
+  onSavedPolygonClick,
+  selectedSavedPolygonId,
 }) {
   const draftIcon = new L.Icon({
     iconUrl:
@@ -81,7 +82,18 @@ export default function MapView({
       {Array.isArray(savedPolygons)
         ? savedPolygons.map((poly) => (
             <Fragment key={poly.id}>
-              <Polygon positions={poly.points.map((p) => [p.lat, p.lng])} />
+              <Polygon
+                positions={poly.points.map((p) => [p.lat, p.lng])}
+                pathOptions={{
+                  color: poly.id === selectedSavedPolygonId ? "red" : "blue",
+                  weight: poly.id === selectedSavedPolygonId ? 4 : 2,
+                }}
+                eventHandlers={{
+                  click: () => {
+                    if (onSavedPolygonClick) onSavedPolygonClick(poly.id);
+                  },
+                }}
+              />
               {poly.points.map((p, idx) => (
                 <Marker
                   key={`${poly.id}-vertex-${idx}`}
