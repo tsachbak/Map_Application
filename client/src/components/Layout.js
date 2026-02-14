@@ -42,6 +42,7 @@ export default function Layout() {
             selectedSavedObjectId={objects.selectedSavedObject?.id ?? null}
             isPolygonClosed={polygons.isPolygonClosed}
             onClosePolygon={polygons.closePolygon}
+            savedPolygons={polygons.savedPolygons}
           />
         </div>
 
@@ -60,7 +61,7 @@ export default function Layout() {
                   }
                   polygons.stopDrawMode();
                 }}
-                onSaveClick={null}
+                onSaveClick={polygons.saveClosedPolygonAsync}
                 onDeleteClick={null}
                 addLabelOff="Add"
                 addLabelOn="Stop"

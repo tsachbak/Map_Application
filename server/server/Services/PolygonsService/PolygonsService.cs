@@ -1,4 +1,5 @@
-﻿using server.Dtos.Polygons;
+﻿using MongoDB.Driver;
+using server.Dtos.Polygons;
 using server.Models;
 
 namespace server.Services.PolygonsService
@@ -42,6 +43,15 @@ namespace server.Services.PolygonsService
 
             await _mongoDbService.PolygonsCollection.InsertOneAsync(entity, cancellationToken: ct);
             return entity.Id;
+        }
+
+        public async Task<IReadOnlyList<MapPolygonEntity>> GetAllPolygonsAsync(CancellationToken ct = default)
+        {
+            var polygons = await _mongoDbService.PolygonsCollection
+                .Find(Builders<MapPolygonEntity>.Filter.Empty)
+                .ToListAsync(ct);
+
+            return polygons;
         }
     }
 }

@@ -11,6 +11,7 @@ import "leaflet/dist/leaflet.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { Fragment } from "react/jsx-runtime";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -26,6 +27,7 @@ L.Icon.Default.mergeOptions({
 export default function MapView({
   savedObjects = [],
   draftObjects = [],
+  savedPolygons = [],
   draftPolygonPoints = [],
   onMapClick,
   onSavedMarkerClick,
@@ -75,6 +77,21 @@ export default function MapView({
       />
 
       <MapClickHandler />
+
+      {Array.isArray(savedPolygons)
+        ? savedPolygons.map((poly) => (
+            <Fragment key={poly.id}>
+              <Polygon positions={poly.points.map((p) => [p.lat, p.lng])} />
+              {poly.points.map((p, idx) => (
+                <Marker
+                  key={`${poly.id}-vertex-${idx}`}
+                  position={[p.lat, p.lng]}
+                  icon={vertexIcon}
+                />
+              ))}
+            </Fragment>
+          ))
+        : null}
 
       {Array.isArray(draftPolygonPoints)
         ? draftPolygonPoints.map((p, idx) => {

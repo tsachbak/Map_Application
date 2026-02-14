@@ -19,11 +19,18 @@ namespace server.Controllers
             _polygonsService = polygonsService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll(CancellationToken ct)
+        {
+            var polygons = await _polygonsService.GetAllPolygonsAsync(ct);
+            return Ok(polygons);
+        }
+
         [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] SavePolygonRequestDto request, CancellationToken ct)
         {
-            if (request?.Points == null || request.Points.Count < 3)
-                return BadRequest("A polygon must have at least 3 points.");
+            if (request == null)
+                return BadRequest("Ilegal request");
 
             var id = await _polygonsService.SavePolygonAsync(request, ct);
 
