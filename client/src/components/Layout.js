@@ -71,15 +71,27 @@ export default function Layout() {
             }
           >
             <div>
-              {polygons.isDrawingPolygon ? (
+              {polygons.selectedSavedPolygon ? (
+                <div>
+                  <div>
+                    <strong>Selected Polygon</strong>
+                  </div>
+                  <div>ID: {polygons.selectedSavedPolygon.id}</div>
+                  <div>Name: {polygons.selectedSavedPolygon.name || "-"}</div>
+                  <div>
+                    Vertices:{" "}
+                    {polygons.selectedSavedPolygon.points?.length - 1 ?? 0}
+                  </div>
+                </div>
+              ) : polygons.isDrawingPolygon ? (
                 <div>
                   <div>
                     <strong>Drawing Polygon</strong>
                   </div>
-                  <div>Points: {polygons.draftPolygonPoints.length}</div>
+                  <div>Points: {polygons.draftPolygonPoints?.length ?? 0}</div>
                 </div>
               ) : (
-                <div>Click Add to start drawing a polygon.</div>
+                <div>No polygon selected</div>
               )}
             </div>
           </Panel>
