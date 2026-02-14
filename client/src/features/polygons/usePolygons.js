@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPolygons, savePolygon } from "../../api/polygonApi";
+import { getPolygons, savePolygon, deletePolygon } from "../../api/polygonApi";
 
 /**
  * usePolygons is a custom hook that manages the state and operations related to polygons on the map.
@@ -73,6 +73,24 @@ export default function usePolygons() {
     }
   }
 
+  async function deleteSelectedPolygonAsync() {
+    const id = selectedSavedPolygon?.id;
+
+    if (!id) return;
+
+    try {
+      await deletePolygon(id);
+      await loadPolygons();
+      setSelectedSavedPolygon(null);
+    } catch (error) {
+      console.error(
+        `[usePolygons] failed to delete polygon with id ${id}:`,
+        error,
+      );
+      alert(error.message);
+    }
+  }
+
   // Loads the saved polygons from the backend and updates the state.
   async function loadPolygons() {
     try {
@@ -128,5 +146,6 @@ export default function usePolygons() {
     saveClosedPolygonAsync,
     loadPolygons,
     selectSavedPolygonById,
+    deleteSelectedPolygonAsync,
   };
 }

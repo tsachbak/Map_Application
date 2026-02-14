@@ -39,5 +39,16 @@ namespace server.Controllers
 
             return StatusCode(201, new {id});
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id, CancellationToken ct)
+        {
+            var deleted = await _polygonsService.DeletePolygonAsync(id, ct);
+         
+            if (!deleted)
+                return NotFound($"Polygon with ID '{id}' not found.");
+            
+            return NoContent();
+        }
     }
 }

@@ -64,7 +64,8 @@ export default function Layout() {
                   polygons.stopDrawMode();
                 }}
                 onSaveClick={polygons.saveClosedPolygonAsync}
-                onDeleteClick={null}
+                onDeleteClick={polygons.deleteSelectedPolygonAsync}
+                deleteDisabled={!polygons.selectedSavedPolygon?.id}
                 addLabelOff="Add"
                 addLabelOn="Stop"
               />

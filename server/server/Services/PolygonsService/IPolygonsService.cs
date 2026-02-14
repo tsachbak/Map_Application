@@ -17,5 +17,11 @@ namespace server.Services.PolygonsService
         /// Get all polygons from the database and return them as a list of MapPolygonEntity objects.
         /// </summary>
         Task<IReadOnlyList<MapPolygonEntity>> GetAllPolygonsAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Deletes a polygon from the database by its ID.
+        /// Returns true if the polygon was successfully deleted, or false if the polygon was not found or the ID was invalid.
+        /// </summary>
+        Task<bool> DeletePolygonAsync(string id, CancellationToken ct = default);
     }
 }

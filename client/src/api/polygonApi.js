@@ -20,3 +20,10 @@ export function savePolygon(polygon) {
   };
   return post("/polygons/save", payload);
 }
+
+/**
+ * Deletes a polygon from the backend.
+ */
+export function deletePolygon(id) {
+  return del(`/polygons/${id}`);
+}

@@ -53,5 +53,17 @@ namespace server.Services.PolygonsService
 
             return polygons;
         }
+
+        public async Task<bool> DeletePolygonAsync(string id, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return false;
+
+            var filter = Builders<MapPolygonEntity>.Filter.Eq(p => p.Id, id);
+
+            var result = await _mongoDbService.PolygonsCollection.DeleteOneAsync(filter, ct);
+
+            return result.DeletedCount > 0;
+        }
     }
 }
