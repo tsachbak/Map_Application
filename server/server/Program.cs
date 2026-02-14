@@ -1,5 +1,6 @@
 
 using server.Services.ObjectsService;
+using server.Services.PolygonsService;
 using server.Settings;
 
 namespace server
@@ -36,6 +37,7 @@ namespace server
 
             builder.Services.AddSingleton<Services.MongoDbService>();
             builder.Services.AddScoped<IObjectsService, ObjectsService>();
+            builder.Services.AddScoped<IPolygonsService, PolygonsService>();
 
             var app = builder.Build();
 

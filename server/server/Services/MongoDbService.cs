@@ -13,6 +13,7 @@ namespace server.Services
     {
         private readonly IMongoDatabase _database;
         public IMongoCollection<MapObjectEntity> ObjectsCollection { get; }
+        public IMongoCollection<MapPolygonEntity> PolygonsCollection { get; }
 
         public MongoDbService(IOptions<MongoSettings> mongoSettings)
         {
@@ -28,6 +29,7 @@ namespace server.Services
             _database = client.GetDatabase(mongoSettings.Value.DatabaseName);
 
             ObjectsCollection = _database.GetCollection<MapObjectEntity>("objects");
+            PolygonsCollection = _database.GetCollection<MapPolygonEntity>("polygons");
             EnsureGeoIndexes();
         }
 
@@ -36,11 +38,17 @@ namespace server.Services
         {
             try
             {
-                var geoIndex = new CreateIndexModel<MapObjectEntity>(
+                var objectGeoIndex = new CreateIndexModel<MapObjectEntity>(
                     Builders<MapObjectEntity>.IndexKeys.Geo2DSphere(o => o.Location),
                     new CreateIndexOptions { Name = "ix_objects_location_2dsphere" });
 
-                ObjectsCollection.Indexes.CreateOne(geoIndex);
+                ObjectsCollection.Indexes.CreateOne(objectGeoIndex);
+
+                var polygonGeoIndex = new CreateIndexModel<MapPolygonEntity>(
+                    Builders<MapPolygonEntity>.IndexKeys.Geo2DSphere(p => p.Location),
+                    new CreateIndexOptions { Name = "ix_polygons_location_2dsphere" });
+
+                PolygonsCollection.Indexes.CreateOne(polygonGeoIndex);
             }
             catch (MongoCommandException ex)
             {
