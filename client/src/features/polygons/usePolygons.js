@@ -147,5 +147,6 @@ export default function usePolygons() {
     loadPolygons,
     selectSavedPolygonById,
     deleteSelectedPolygonAsync,
+    setSelectedSavedPolygon,
   };
 }

@@ -1,11 +1,12 @@
-import MapDataTablePlaceholder from "./MapDataTablePlaceholder";
 import Panel from "./Panel";
 import PanelActions from "./PanelActions";
 import MapView from "./MapView";
+import MapDataTable from "./MapDataTable";
 import "./Layout.css";
 
 import useObjects from "../features/objects/useObjects";
 import usePolygons from "../features/polygons/usePolygons";
+import useMapData from "../features/mapData/useMapData";
 
 /**
  * this component will be the main layout of the application,
@@ -14,6 +15,7 @@ import usePolygons from "../features/polygons/usePolygons";
 export default function Layout() {
   const objects = useObjects();
   const polygons = usePolygons();
+  const mapData = useMapData();
 
   function handleMapClick(lat, lng) {
     if (polygons.isDrawingPolygon) {
@@ -25,6 +27,22 @@ export default function Layout() {
       objects.addDraftObject(lat, lng);
     }
     return;
+  }
+
+  function handleMapDataRowClick(row) {
+    if (!row) return;
+
+    if (row.rowType === "Object") {
+      polygons.setSelectedSavedPolygon(null);
+      objects.selectSavedObjectById(row.sourceId);
+      return;
+    }
+
+    if (row.rowType === "PolygonVertex") {
+      objects.setSelectedSavedObject(null);
+      polygons.selectSavedPolygonById(row.groupId);
+      return;
+    }
   }
 
   return (
@@ -63,8 +81,14 @@ export default function Layout() {
                   }
                   polygons.stopDrawMode();
                 }}
-                onSaveClick={polygons.saveClosedPolygonAsync}
-                onDeleteClick={polygons.deleteSelectedPolygonAsync}
+                onSaveClick={async () => {
+                  await polygons.saveClosedPolygonAsync();
+                  await mapData.refresh();
+                }}
+                onDeleteClick={async () => {
+                  await polygons.deleteSelectedPolygonAsync();
+                  await mapData.refresh();
+                }}
                 deleteDisabled={!polygons.selectedSavedPolygon?.id}
                 addLabelOff="Add"
                 addLabelOn="Stop"
@@ -108,10 +132,16 @@ export default function Layout() {
                   }
                   objects.toggleAddMode();
                 }}
-                onSaveClick={objects.saveDraftObjectsAsync}
-                onDeleteClick={() =>
-                  objects.deleteObjectByIdAsync(objects.selectedSavedObject?.id)
-                }
+                onSaveClick={async () => {
+                  await objects.saveDraftObjectsAsync();
+                  await mapData.refresh();
+                }}
+                onDeleteClick={async () => {
+                  await objects.deleteObjectByIdAsync(
+                    objects.selectedSavedObject?.id,
+                  );
+                  await mapData.refresh();
+                }}
                 deleteDisabled={!objects.selectedSavedObject?.id}
                 addLabelOff="Add"
                 addLabelOn="Stop"
@@ -137,7 +167,14 @@ export default function Layout() {
           </Panel>
 
           <Panel title="Map Data">
-            <MapDataTablePlaceholder />
+            <MapDataTable
+              rows={mapData.rows}
+              loading={mapData.loading}
+              error={mapData.error}
+              selectedObjectId={objects.selectedSavedObject?.id ?? null}
+              selectedPolygonId={polygons.selectedSavedPolygon?.id ?? null}
+              onRowClick={handleMapDataRowClick}
+            />
           </Panel>
         </div>
       </div>
