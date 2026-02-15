@@ -1,4 +1,5 @@
 
+using server.Handlers.MapDataHandler;
 using server.Services.ObjectsService;
 using server.Services.PolygonsService;
 using server.Settings;
@@ -38,6 +39,7 @@ namespace server
             builder.Services.AddSingleton<Services.MongoDbService>();
             builder.Services.AddScoped<IObjectsService, ObjectsService>();
             builder.Services.AddScoped<IPolygonsService, PolygonsService>();
+            builder.Services.AddScoped<IMapDataHandler, MapDataHandler>();
 
             var app = builder.Build();
 
