@@ -35,7 +35,9 @@ export default function MapView({
   onClosePolygon,
   onSavedPolygonClick,
   selectedSavedPolygonId,
+  selectedSavedObjectId,
 }) {
+  const defaultIcon = new L.Icon.Default();
   const draftIcon = new L.Icon({
     iconUrl:
       "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
@@ -52,6 +54,15 @@ export default function MapView({
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     iconSize: [18, 30],
     iconAnchor: [9, 30],
+  });
+
+  const selectedObjectIcon = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
   });
 
   function MapClickHandler() {
@@ -138,18 +149,23 @@ export default function MapView({
         )
       ) : null}
 
-      {savedObjects.map((obj) => (
-        <Marker
-          key={obj.id}
-          position={[obj.lat, obj.lng]}
-          eventHandlers={{
-            click: () => {
-              if (!onSavedMarkerClick) return;
-              onSavedMarkerClick(obj.id);
-            },
-          }}
-        />
-      ))}
+      {savedObjects.map((obj) => {
+        const isSelected = obj.id === selectedSavedObjectId;
+
+        return (
+          <Marker
+            key={obj.id}
+            position={[obj.lat, obj.lng]}
+            icon={isSelected ? selectedObjectIcon : defaultIcon}
+            eventHandlers={{
+              click: () => {
+                if (!onSavedMarkerClick) return;
+                onSavedMarkerClick(obj.id);
+              },
+            }}
+          />
+        );
+      })}
 
       {draftObjects.map((obj) => (
         <Marker key={obj.id} position={[obj.lat, obj.lng]} icon={draftIcon} />

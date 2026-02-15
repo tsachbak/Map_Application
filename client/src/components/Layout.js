@@ -29,18 +29,30 @@ export default function Layout() {
     return;
   }
 
+  function selectObjectById(id) {
+    if (!id) return;
+
+    polygons.setSelectedSavedPolygon(null);
+    objects.selectSavedObjectById(id);
+  }
+
+  function selectPolygonById(id) {
+    if (!id) return;
+
+    objects.setSelectedSavedObject(null);
+    polygons.selectSavedPolygonById(id);
+  }
+
   function handleMapDataRowClick(row) {
     if (!row) return;
 
     if (row.rowType === "Object") {
-      polygons.setSelectedSavedPolygon(null);
-      objects.selectSavedObjectById(row.sourceId);
+      selectObjectById(row.sourceId);
       return;
     }
 
     if (row.rowType === "PolygonVertex") {
-      objects.setSelectedSavedObject(null);
-      polygons.selectSavedPolygonById(row.groupId);
+      selectPolygonById(row.groupId);
       return;
     }
   }
@@ -55,13 +67,13 @@ export default function Layout() {
             draftObjects={objects.draftObjects}
             draftPolygonPoints={polygons.draftPolygonPoints}
             onMapClick={handleMapClick}
-            onSavedMarkerClick={objects.selectSavedObjectById}
+            onSavedMarkerClick={selectObjectById}
             selectedSavedObject={objects.selectedSavedObject}
             selectedSavedObjectId={objects.selectedSavedObject?.id ?? null}
             isPolygonClosed={polygons.isPolygonClosed}
             onClosePolygon={polygons.closePolygon}
             savedPolygons={polygons.savedPolygons}
-            onSavedPolygonClick={polygons.selectSavedPolygonById}
+            onSavedPolygonClick={selectPolygonById}
             selectedSavedPolygonId={polygons.selectedSavedPolygon?.id ?? null}
           />
         </div>
