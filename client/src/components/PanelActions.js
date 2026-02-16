@@ -15,7 +15,7 @@ export default function PanelActions({
   const addText = addActive ? addLabelOn : addLabelOff;
 
   return (
-    <div className="panel-actions-root">
+    <div className="panel-actions">
       <button
         type="button"
         className="panel-actions-button"

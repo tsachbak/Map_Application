@@ -1,3 +1,5 @@
+import "./PanelDetails.css";
+
 export default function ObjectsPanelContent({
   selectedObject,
   getObjectDisplayLabel,
@@ -5,13 +7,22 @@ export default function ObjectsPanelContent({
   if (selectedObject) {
     return (
       <div>
-        <div>
-          <strong>Selected Object</strong>
+        <div className="panel-details-title">Selected Object</div>
+        <div className="panel-details-grid">
+          <div className="panel-details-label">Object</div>
+          <div className="panel-details-value">
+            {getObjectDisplayLabel(selectedObject.id)}
+          </div>
+
+          <div className="panel-details-label">Latitude</div>
+          <div className="panel-details-value">{selectedObject.lat}</div>
+
+          <div className="panel-details-label">Longitude</div>
+          <div className="panel-details-value">{selectedObject.lng}</div>
+
+          <div className="panel-details-label">Type</div>
+          <div className="panel-details-value">{selectedObject.type}</div>
         </div>
-        <div>{getObjectDisplayLabel(selectedObject.id)}</div>
-        <div>Latitude: {selectedObject.lat}</div>
-        <div>Longitude: {selectedObject.lng}</div>
-        <div>Type: {selectedObject.type}</div>
       </div>
     );
   }

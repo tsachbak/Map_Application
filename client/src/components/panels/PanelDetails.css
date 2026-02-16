@@ -1,0 +1,24 @@
+.panel-details-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1e1f25;
+}
+
+.panel-details-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.panel-details-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.panel-details-value {
+  font-size: 14px;
+  color: #1e1f25;
+  font-weight: 600;
+  word-break: break-word;
+}
