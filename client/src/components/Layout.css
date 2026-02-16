@@ -44,6 +44,11 @@
   overflow: hidden;
 }
 
+.layout-side > section:last-child {
+  flex: 1;
+  min-height: 0;
+}
+
 #root h1 {
   margin: 16px 16px 0 16px;
   font-size: 26px;

@@ -12,8 +12,25 @@ export default function MapDataTable({
   onRowClick,
   getRowDisplayLabel,
 }) {
-  if (loading) return <div>Loading Map Data...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="map-data-state">Loading Map Data...</div>;
+  if (error) return <div className="map-data-state">{error}</div>;
+
+  function getRowKey(row) {
+    if (!row) return "row-unknown";
+
+    if (row.rowType === "Object") {
+      return `Object|${row.sourceId ?? "unknown"}`;
+    }
+
+    if (row.rowType === "PolygonVertex") {
+      const vertexPart = Number.isInteger(row.vertexIndex)
+        ? row.vertexIndex
+        : "unknown";
+      return `PolygonVertex|${row.groupId ?? "unknown"}|${vertexPart}`;
+    }
+
+    return `Unknown|${row.rowType ?? "unknown"}`;
+  }
 
   function isRowSelected(row) {
     if (row.rowType === "Object") {
@@ -35,8 +52,16 @@ export default function MapDataTable({
     return "-";
   }
 
+  function formatCoordinate(value) {
+    if (typeof value === "number") {
+      return value.toFixed(6);
+    }
+
+    return "-";
+  }
+
   return (
-    <div style={{ overflowX: "auto", maxHeight: "100%" }}>
+    <div className="map-data-table-wrapper">
       <table className="map-data-table">
         <thead>
           <tr>
@@ -46,18 +71,17 @@ export default function MapDataTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => (
+          {rows.map((row) => (
             <tr
-              key={index}
+              key={getRowKey(row)}
               onClick={() => onRowClick && onRowClick(row)}
-              style={{
-                cursor: "pointer",
-                backgroundColor: isRowSelected(row) ? "#e0f7fa" : "transparent",
-              }}
+              className={
+                isRowSelected(row) ? "map-data-row selected" : "map-data-row"
+              }
             >
               <td>{getRowLabel(row)}</td>
-              <td>{row.latitude}</td>
-              <td>{row.longitude}</td>
+              <td>{formatCoordinate(row.latitude)}</td>
+              <td>{formatCoordinate(row.longitude)}</td>
             </tr>
           ))}
         </tbody>
