@@ -1,3 +1,5 @@
+import "./PanelDetails.css";
+
 export default function PolygonsPanelContent({
   selectedPolygon,
   isDrawingPolygon,
