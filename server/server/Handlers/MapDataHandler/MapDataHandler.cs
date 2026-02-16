@@ -45,7 +45,7 @@ namespace server.Handlers.MapDataHandler
                 if (outerRing == null || outerRing.Count == 0)
                     continue;
 
-                for (int i = 0; i < outerRing.Count; i++)
+                for (int i = 0; i < outerRing.Count - 1; i++)
                 {
                     var vertex = outerRing[i];
                     if (vertex == null || vertex.Length < 2)

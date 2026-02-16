@@ -47,9 +47,18 @@ export default function MapView({
     iconAnchor: [12, 41],
   });
 
+  const draftVertexIcon = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    iconSize: [18, 30],
+    iconAnchor: [9, 30],
+  });
+
   const vertexIcon = new L.Icon({
     iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png",
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
     shadowUrl:
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     iconSize: [18, 30],
@@ -126,7 +135,7 @@ export default function MapView({
               <Marker
                 key={`vertex-${idx}`}
                 position={[p.lat, p.lng]}
-                icon={vertexIcon}
+                icon={draftVertexIcon}
                 eventHandlers={
                   canClose
                     ? {
