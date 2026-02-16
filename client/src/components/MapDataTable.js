@@ -10,6 +10,7 @@ export default function MapDataTable({
   selectedObjectId = null,
   selectedPolygonId = null,
   onRowClick,
+  getRowDisplayLabel,
 }) {
   if (loading) return <div>Loading Map Data...</div>;
   if (error) return <div>{error}</div>;
@@ -24,6 +25,14 @@ export default function MapDataTable({
     }
 
     return false;
+  }
+
+  function getRowLabel(row) {
+    if (typeof getRowDisplayLabel === "function") {
+      return getRowDisplayLabel(row);
+    }
+
+    return "-";
   }
 
   return (
@@ -46,7 +55,7 @@ export default function MapDataTable({
                 backgroundColor: isRowSelected(row) ? "#e0f7fa" : "transparent",
               }}
             >
-              <td>{row.label}</td>
+              <td>{getRowLabel(row)}</td>
               <td>{row.latitude}</td>
               <td>{row.longitude}</td>
             </tr>

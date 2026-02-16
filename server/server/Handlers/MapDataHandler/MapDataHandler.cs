@@ -27,7 +27,6 @@ namespace server.Handlers.MapDataHandler
                 rows.Add(new MapDataRowDto
                 {
                     RowType = "Object",
-                    Label = string.IsNullOrWhiteSpace(obj.Object) ? id : obj.Object,
                     Latitude = obj.Location.Coordinates[1],
                     Longitude = obj.Location.Coordinates[0],
                     SourceId = id,
@@ -57,7 +56,6 @@ namespace server.Handlers.MapDataHandler
                     rows.Add(new MapDataRowDto
                     {
                         RowType = "PolygonVertex",
-                        Label = $"Polygon {poly.Name} - V{i}",
                         Latitude = latitude,
                         Longitude = longitude,
                         SourceId = polygonId,

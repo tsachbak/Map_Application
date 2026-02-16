@@ -49,6 +49,7 @@ namespace server.Services.PolygonsService
         {
             var polygons = await _mongoDbService.PolygonsCollection
                 .Find(Builders<MapPolygonEntity>.Filter.Empty)
+                .SortBy(p => p.Id)
                 .ToListAsync(ct);
 
             return polygons;

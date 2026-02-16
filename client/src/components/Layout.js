@@ -17,6 +17,48 @@ export default function Layout() {
   const polygons = usePolygons();
   const mapData = useMapData();
 
+  const objectLabelsById = buildLabelMap(objects.savedObjects, "Object");
+  const polygonLabelsById = buildLabelMap(polygons.savedPolygons, "Polygon");
+
+  function buildLabelMap(items = [], prefix) {
+    const map = new Map();
+    if (!Array.isArray(items)) return map;
+
+    items.forEach((item, index) => {
+      if (!item?.id) return;
+      map.set(item.id, `${prefix} #${index + 1}`);
+    });
+    return map;
+  }
+
+  function getObjectDisplayLabelById(id) {
+    return objectLabelsById.get(id) ?? `Object #${id}`;
+  }
+
+  function getPolygonDisplayLabelById(id) {
+    return polygonLabelsById.get(id) ?? `Polygon #${id}`;
+  }
+
+  function getRowDisplayLabel(row) {
+    if (!row) return "";
+
+    if (row.rowType === "Object") {
+      return getObjectDisplayLabelById(row.sourceId);
+    }
+
+    if (row.rowType === "PolygonVertex") {
+      const polygonLabel = getPolygonDisplayLabelById(row.groupId);
+      const vertexIndex = Number.isInteger(row.vertexIndex)
+        ? row.vertexIndex + 1
+        : null;
+      return vertexIndex !== null
+        ? `${polygonLabel} - V${vertexIndex}`
+        : polygonLabel;
+    }
+
+    return "";
+  }
+
   function handleMapClick(lat, lng) {
     if (polygons.isDrawingPolygon) {
       polygons.addPoint(lat, lng);
@@ -113,7 +155,11 @@ export default function Layout() {
                   <div>
                     <strong>Selected Polygon</strong>
                   </div>
-                  <div>ID: {polygons.selectedSavedPolygon.id}</div>
+                  <div>
+                    {getPolygonDisplayLabelById(
+                      polygons.selectedSavedPolygon.id,
+                    )}
+                  </div>
                   <div>Name: {polygons.selectedSavedPolygon.name || "-"}</div>
                   <div>
                     Vertices:{" "}
@@ -166,8 +212,9 @@ export default function Layout() {
                   <div>
                     <strong>Selected Object</strong>
                   </div>
-                  <div>ID: {objects.selectedSavedObject.id}</div>
-                  <div>Object: {objects.selectedSavedObject.object || "-"}</div>
+                  <div>
+                    {getObjectDisplayLabelById(objects.selectedSavedObject.id)}
+                  </div>
                   <div>Latitude: {objects.selectedSavedObject.lat}</div>
                   <div>Longitude: {objects.selectedSavedObject.lng}</div>
                   <div>Type: {objects.selectedSavedObject.type}</div>
@@ -186,6 +233,7 @@ export default function Layout() {
               selectedObjectId={objects.selectedSavedObject?.id ?? null}
               selectedPolygonId={polygons.selectedSavedPolygon?.id ?? null}
               onRowClick={handleMapDataRowClick}
+              getRowDisplayLabel={getRowDisplayLabel}
             />
           </Panel>
         </div>

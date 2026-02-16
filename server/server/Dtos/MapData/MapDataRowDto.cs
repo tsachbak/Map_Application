@@ -10,10 +10,6 @@
         /// </summary>
         public string RowType { get; set; } = string.Empty;
         /// <summary>
-        /// Label is the name of the object or polygon vertex, it can be used for display purposes in the frontend
-        /// </summary>
-        public string Label { get; set; } = string.Empty;
-        /// <summary>
         /// Latitude
         /// </summary>
         public double Latitude { get; set; }

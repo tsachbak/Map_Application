@@ -39,6 +39,7 @@ namespace server.Services.ObjectsService
         {
             var objects = await _mongoDbService.ObjectsCollection
                 .Find(Builders<MapObjectEntity>.Filter.Empty)
+                .SortBy(o => o.Id)
                 .ToListAsync(ct);
 
             return objects;
