@@ -2,6 +2,8 @@ import Panel from "./Panel";
 import PanelActions from "./PanelActions";
 import MapView from "./MapView";
 import MapDataTable from "./MapDataTable";
+import PolygonsPanelContent from "./panels/PolygonsPanelContent";
+import ObjectsPanelContent from "./panels/ObjectsPanelContent";
 import {
   buildLabelMap,
   getObjectDisplayLabelById,
@@ -116,35 +118,14 @@ export default function Layout() {
               />
             }
           >
-            <div>
-              {polygons.selectedSavedPolygon ? (
-                <div>
-                  <div>
-                    <strong>Selected Polygon</strong>
-                  </div>
-                  <div>
-                    {getPolygonDisplayLabelById(
-                      polygons.selectedSavedPolygon.id,
-                      polygonLabelsById,
-                    )}
-                  </div>
-                  <div>Name: {polygons.selectedSavedPolygon.name || "-"}</div>
-                  <div>
-                    Vertices:{" "}
-                    {polygons.selectedSavedPolygon.points?.length - 1 ?? 0}
-                  </div>
-                </div>
-              ) : polygons.isDrawingPolygon ? (
-                <div>
-                  <div>
-                    <strong>Drawing Polygon</strong>
-                  </div>
-                  <div>Points: {polygons.draftPolygonPoints?.length ?? 0}</div>
-                </div>
-              ) : (
-                <div>No polygon selected</div>
-              )}
-            </div>
+            <PolygonsPanelContent
+              selectedPolygon={polygons.selectedSavedPolygon}
+              isDrawingPolygon={polygons.isDrawingPolygon}
+              draftPolygonPoints={polygons.draftPolygonPoints}
+              getPolygonDisplayLabel={(id) =>
+                getPolygonDisplayLabelById(id, polygonLabelsById)
+              }
+            />
           </Panel>
 
           <Panel
@@ -174,26 +155,12 @@ export default function Layout() {
               />
             }
           >
-            <div>
-              {objects.selectedSavedObject ? (
-                <div>
-                  <div>
-                    <strong>Selected Object</strong>
-                  </div>
-                  <div>
-                    {getObjectDisplayLabelById(
-                      objects.selectedSavedObject.id,
-                      objectLabelsById,
-                    )}
-                  </div>
-                  <div>Latitude: {objects.selectedSavedObject.lat}</div>
-                  <div>Longitude: {objects.selectedSavedObject.lng}</div>
-                  <div>Type: {objects.selectedSavedObject.type}</div>
-                </div>
-              ) : (
-                <div>No object selected</div>
-              )}
-            </div>
+            <ObjectsPanelContent
+              selectedObject={objects.selectedSavedObject}
+              getObjectDisplayLabel={(id) =>
+                getObjectDisplayLabelById(id, objectLabelsById)
+              }
+            />
           </Panel>
 
           <Panel title="Map Data">
