@@ -11,5 +11,10 @@ namespace server.Handlers.MapDataHandler
         /// Builds table rows for map data points.
         /// </summary>
         Task<IReadOnlyList<MapDataRowDto>> GetRowsAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Clears all map data (Objects and Polygons) from the database and returns a summary of the deleted data.
+        /// </summary>
+        Task<ClearMapResponseDto> ClearMapDataAsync(CancellationToken ct = default);
     }
 }

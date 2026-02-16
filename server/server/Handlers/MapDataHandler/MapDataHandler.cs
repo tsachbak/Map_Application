@@ -67,5 +67,17 @@ namespace server.Handlers.MapDataHandler
 
             return rows;
         }
+
+        public async Task<ClearMapResponseDto> ClearMapDataAsync(CancellationToken ct = default)
+        {
+            var deletedObjectsCount = await _objectsService.DeleteAllObjectsAsync(ct);
+            var deletedPolygonsCount = await _polygonsService.DeleteAllPolygonsAsync(ct);
+
+            return new ClearMapResponseDto
+            {
+                DeletedObjectsCount = deletedObjectsCount,
+                DeletedPolygonsCount = deletedPolygonsCount
+            };
+        }
     }
 }

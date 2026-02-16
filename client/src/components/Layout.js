@@ -4,6 +4,7 @@ import MapView from "./MapView";
 import MapDataTable from "./MapDataTable";
 import PolygonsPanelContent from "./panels/PolygonsPanelContent";
 import ObjectsPanelContent from "./panels/ObjectsPanelContent";
+import { clearAllMapData } from "../api/MapDataApi";
 import {
   buildLabelMap,
   getObjectDisplayLabelById,
@@ -70,7 +71,40 @@ export default function Layout() {
 
   return (
     <div className="app-root">
-      <h1 className="app-title">Map Application</h1>
+      <div className="app-header">
+        <h1 className="app-title">Map Application</h1>
+        <button
+          className="danger-button"
+          type="button"
+          onClick={async () => {
+            const confirmed = window.confirm(
+              "This will delete ALL Objects and Polygons from the server.\nAre you sure you want to continue?",
+            );
+            if (!confirmed) return;
+            console.warn("Deleting all map data...");
+
+            try {
+              await clearAllMapData();
+
+              objects.setSelectedSavedObject(null);
+              objects.setDraftObjects([]);
+              objects.setIsAddingObject(false);
+
+              polygons.setSelectedSavedPolygon(null);
+              polygons.resetDraft();
+
+              await objects.loadObjects();
+              await polygons.loadPolygons();
+              await mapData.refresh();
+            } catch (error) {
+              console.error("[Layout] Failed to clear map data:", error);
+              alert(error.message);
+            }
+          }}
+        >
+          Clear Map Data
+        </button>
+      </div>
       <div className="layout-root">
         <div className="layout-map">
           <MapView

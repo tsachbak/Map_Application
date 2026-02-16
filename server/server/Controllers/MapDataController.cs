@@ -24,5 +24,13 @@ namespace server.Controllers
             var rows = await _mapDataHandler.GetRowsAsync(ct);
             return Ok(rows);
         }
+
+        [HttpDelete("clear-all")]
+        public async Task<IActionResult> ClearAll(CancellationToken ct)
+        {
+            var result = await _mapDataHandler.ClearMapDataAsync(ct);
+
+            return Ok(result);
+        }
     }
 }

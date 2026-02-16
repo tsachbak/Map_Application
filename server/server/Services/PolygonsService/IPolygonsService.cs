@@ -23,5 +23,10 @@ namespace server.Services.PolygonsService
         /// Returns true if the polygon was successfully deleted, or false if the polygon was not found or the ID was invalid.
         /// </summary>
         Task<bool> DeletePolygonAsync(string id, CancellationToken ct = default);
+
+        /// <summary>
+        /// Asynchronously deletes all polygons from the data store and returns the count of deleted polygons.
+        /// </summary>
+        Task<long> DeleteAllPolygonsAsync(CancellationToken ct = default);
     }
 }

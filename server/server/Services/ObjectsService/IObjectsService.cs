@@ -22,5 +22,10 @@ namespace server.Services.ObjectsService
         /// Deletes a single Map Object by its MongoDB _id and returns true if the deletion was successful, false otherwise.
         /// </summary>
         Task<bool> DeleteObjectAsync(string id, CancellationToken ct = default);
+
+        /// <summary>
+        /// Asynchronously deletes all objects from the data store.
+        /// </summary>
+        Task<long> DeleteAllObjectsAsync(CancellationToken ct = default);
     }
 }

@@ -66,5 +66,13 @@ namespace server.Services.PolygonsService
 
             return result.DeletedCount > 0;
         }
+
+        public async Task<long> DeleteAllPolygonsAsync(CancellationToken ct = default)
+        {
+            var result = await _mongoDbService.PolygonsCollection
+                .DeleteManyAsync(Builders<MapPolygonEntity>.Filter.Empty, ct);
+
+            return result?.DeletedCount ?? 0;
+        }
     }
 }

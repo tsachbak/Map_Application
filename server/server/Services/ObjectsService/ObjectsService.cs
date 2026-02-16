@@ -55,5 +55,13 @@ namespace server.Services.ObjectsService
             var result = await _mongoDbService.ObjectsCollection.DeleteOneAsync(filter, ct);
             return result.DeletedCount > 0;
         }
+
+        public async Task<long> DeleteAllObjectsAsync(CancellationToken ct = default)
+        {
+            var result = await _mongoDbService.ObjectsCollection
+                .DeleteManyAsync(Builders<MapObjectEntity>.Filter.Empty, ct);
+
+            return result?.DeletedCount ?? 0;
+        }
     }
 }
