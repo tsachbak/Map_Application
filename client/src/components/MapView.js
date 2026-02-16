@@ -14,6 +14,7 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { Fragment } from "react/jsx-runtime";
 import { useEffect } from "react";
+import { getObjectLeafletIcon } from "../features/objects/symbolLibrary";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -111,6 +112,18 @@ export default function MapView({
     return null;
   }
 
+  function resolveObjectIcon(objType, { isSelected = false, isDraft = false }) {
+    const type = String(objType ?? "marker").toLowerCase();
+
+    if (type === "marker") {
+      if (isDraft) return draftIcon;
+      if (isSelected) return selectedObjectIcon;
+      return defaultIcon;
+    }
+
+    return getObjectLeafletIcon(type) ?? defaultIcon;
+  }
+
   return (
     <MapContainer
       center={[31.7683, 35.2137]}
@@ -190,7 +203,7 @@ export default function MapView({
           <Marker
             key={obj.id}
             position={[obj.lat, obj.lng]}
-            icon={isSelected ? selectedObjectIcon : defaultIcon}
+            icon={resolveObjectIcon(obj.type, { isSelected })}
             eventHandlers={{
               click: () => {
                 if (!onSavedMarkerClick) return;
@@ -202,7 +215,11 @@ export default function MapView({
       })}
 
       {draftObjects.map((obj) => (
-        <Marker key={obj.id} position={[obj.lat, obj.lng]} icon={draftIcon} />
+        <Marker
+          key={obj.id}
+          position={[obj.lat, obj.lng]}
+          icon={resolveObjectIcon(obj.type, { isDraft: true })}
+        />
       ))}
     </MapContainer>
   );
