@@ -2,6 +2,12 @@ import Panel from "./Panel";
 import PanelActions from "./PanelActions";
 import MapView from "./MapView";
 import MapDataTable from "./MapDataTable";
+import {
+  buildLabelMap,
+  getObjectDisplayLabelById,
+  getPolygonDisplayLabelById,
+  getRowDisplayLabel,
+} from "../utils/displayLabels";
 import "./Layout.css";
 
 import useObjects from "../features/objects/useObjects";
@@ -19,45 +25,6 @@ export default function Layout() {
 
   const objectLabelsById = buildLabelMap(objects.savedObjects, "Object");
   const polygonLabelsById = buildLabelMap(polygons.savedPolygons, "Polygon");
-
-  function buildLabelMap(items = [], prefix) {
-    const map = new Map();
-    if (!Array.isArray(items)) return map;
-
-    items.forEach((item, index) => {
-      if (!item?.id) return;
-      map.set(item.id, `${prefix} #${index + 1}`);
-    });
-    return map;
-  }
-
-  function getObjectDisplayLabelById(id) {
-    return objectLabelsById.get(id) ?? `Object #${id}`;
-  }
-
-  function getPolygonDisplayLabelById(id) {
-    return polygonLabelsById.get(id) ?? `Polygon #${id}`;
-  }
-
-  function getRowDisplayLabel(row) {
-    if (!row) return "";
-
-    if (row.rowType === "Object") {
-      return getObjectDisplayLabelById(row.sourceId);
-    }
-
-    if (row.rowType === "PolygonVertex") {
-      const polygonLabel = getPolygonDisplayLabelById(row.groupId);
-      const vertexIndex = Number.isInteger(row.vertexIndex)
-        ? row.vertexIndex + 1
-        : null;
-      return vertexIndex !== null
-        ? `${polygonLabel} - V${vertexIndex}`
-        : polygonLabel;
-    }
-
-    return "";
-  }
 
   function handleMapClick(lat, lng) {
     if (polygons.isDrawingPolygon) {
@@ -158,6 +125,7 @@ export default function Layout() {
                   <div>
                     {getPolygonDisplayLabelById(
                       polygons.selectedSavedPolygon.id,
+                      polygonLabelsById,
                     )}
                   </div>
                   <div>Name: {polygons.selectedSavedPolygon.name || "-"}</div>
@@ -213,7 +181,10 @@ export default function Layout() {
                     <strong>Selected Object</strong>
                   </div>
                   <div>
-                    {getObjectDisplayLabelById(objects.selectedSavedObject.id)}
+                    {getObjectDisplayLabelById(
+                      objects.selectedSavedObject.id,
+                      objectLabelsById,
+                    )}
                   </div>
                   <div>Latitude: {objects.selectedSavedObject.lat}</div>
                   <div>Longitude: {objects.selectedSavedObject.lng}</div>
@@ -233,7 +204,9 @@ export default function Layout() {
               selectedObjectId={objects.selectedSavedObject?.id ?? null}
               selectedPolygonId={polygons.selectedSavedPolygon?.id ?? null}
               onRowClick={handleMapDataRowClick}
-              getRowDisplayLabel={getRowDisplayLabel}
+              getRowDisplayLabel={(row) =>
+                getRowDisplayLabel(row, objectLabelsById, polygonLabelsById)
+              }
             />
           </Panel>
         </div>
