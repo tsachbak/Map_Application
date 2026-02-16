@@ -6,6 +6,7 @@ import {
   Polygon,
   useMapEvents,
   useMap,
+  CircleMarker,
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -198,19 +199,33 @@ export default function MapView({
 
       {savedObjects.map((obj) => {
         const isSelected = obj.id === selectedSavedObjectId;
+        const type = String(obj.type ?? "marker").toLowerCase();
+        const isDefaultMarker = type === "marker";
 
         return (
-          <Marker
-            key={obj.id}
-            position={[obj.lat, obj.lng]}
-            icon={resolveObjectIcon(obj.type, { isSelected })}
-            eventHandlers={{
-              click: () => {
-                if (!onSavedMarkerClick) return;
-                onSavedMarkerClick(obj.id);
-              },
-            }}
-          />
+          <Fragment key={obj.id}>
+            {!isDefaultMarker && isSelected ? (
+              <CircleMarker
+                center={[obj.lat, obj.lng]}
+                radius={22}
+                pathOptions={{
+                  color: "red",
+                  weight: 3,
+                  fillOpacity: 0,
+                }}
+              />
+            ) : null}
+            <Marker
+              position={[obj.lat, obj.lng]}
+              icon={resolveObjectIcon(obj.type, { isSelected })}
+              eventHandlers={{
+                click: () => {
+                  if (!onSavedMarkerClick) return;
+                  onSavedMarkerClick(obj.id);
+                },
+              }}
+            />
+          </Fragment>
         );
       })}
 

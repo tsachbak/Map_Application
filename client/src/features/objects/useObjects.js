@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getObjects, saveObjects, deleteObject } from "../../api/objectsApi";
+import { SYMBOL_TYPES } from "./symbolLibrary";
 
 /**
  * useObjects is a custom hook that manages the state and operations related to map objects.
@@ -9,6 +10,9 @@ export default function useObjects() {
   const [draftObjects, setDraftObjects] = useState([]);
   const [isAddingObject, setIsAddingObject] = useState(false);
   const [selectedSavedObject, setSelectedSavedObject] = useState(null);
+  const [selectedObjectType, setSelectedObjectType] = useState(
+    SYMBOL_TYPES.MARKER,
+  );
 
   /// Loads the saved objects from the backend and updates the state.
   async function loadObjects() {
@@ -80,7 +84,7 @@ export default function useObjects() {
         id,
         lat,
         lng,
-        type: "marker",
+        type: selectedObjectType ?? SYMBOL_TYPES.MARKER,
       },
     ]);
   }
@@ -120,6 +124,7 @@ export default function useObjects() {
     draftObjects,
     isAddingObject,
     selectedSavedObject,
+    selectedObjectType,
     loadObjects,
     saveDraftObjectsAsync,
     setDraftObjects,
@@ -130,5 +135,6 @@ export default function useObjects() {
     selectSavedObjectById,
     toggleAddMode,
     stopAddMode,
+    setSelectedObjectType,
   };
 }

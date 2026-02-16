@@ -169,6 +169,9 @@ export default function Layout() {
               getObjectDisplayLabel={(id) =>
                 getObjectDisplayLabelById(id, objectLabelsById)
               }
+              isAddingObject={objects.isAddingObject}
+              selectedObjectType={objects.selectedObjectType}
+              onSelectedObjectTypeChange={objects.setSelectedObjectType}
             />
           </Panel>
 
