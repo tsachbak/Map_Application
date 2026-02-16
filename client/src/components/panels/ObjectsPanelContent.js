@@ -1,5 +1,6 @@
 import "./PanelDetails.css";
 import { SYMBOL_TYPE_OPTIONS } from "../../features/objects/symbolLibrary";
+import { getObjectSymbolPreviewUrl } from "../../features/objects/symbolLibrary";
 
 export default function ObjectsPanelContent({
   selectedObject,
@@ -8,6 +9,10 @@ export default function ObjectsPanelContent({
   selectedObjectType,
   onSelectedObjectTypeChange,
 }) {
+  const previewUrl = selectedObject
+    ? getObjectSymbolPreviewUrl(selectedObject.type)
+    : null;
+
   return (
     <div>
       {isAddingObject ? (
@@ -35,20 +40,35 @@ export default function ObjectsPanelContent({
       {selectedObject ? (
         <div>
           <div className="panel-details-title">Selected Object</div>
-          <div className="panel-details-grid">
-            <div className="panel-details-label">Object</div>
-            <div className="panel-details-value">
-              {getObjectDisplayLabel(selectedObject.id)}
+
+          <div className="panel-details-row">
+            <div className="panel-details-left">
+              <div className="panel-details-grid">
+                <div className="panel-details-label">Object</div>
+                <div className="panel-details-value">
+                  {getObjectDisplayLabel(selectedObject.id)}
+                </div>
+
+                <div className="panel-details-label">Latitude</div>
+                <div className="panel-details-value">{selectedObject.lat}</div>
+
+                <div className="panel-details-label">Longitude</div>
+                <div className="panel-details-value">{selectedObject.lng}</div>
+
+                <div className="panel-details-label">Type</div>
+                <div className="panel-details-value">{selectedObject.type}</div>
+              </div>
             </div>
 
-            <div className="panel-details-label">Latitude</div>
-            <div className="panel-details-value">{selectedObject.lat}</div>
-
-            <div className="panel-details-label">Longitude</div>
-            <div className="panel-details-value">{selectedObject.lng}</div>
-
-            <div className="panel-details-label">Type</div>
-            <div className="panel-details-value">{selectedObject.type}</div>
+            {previewUrl ? (
+              <div className="panel-details-preview">
+                <img
+                  src={previewUrl}
+                  alt={`${selectedObject.type} symbol`}
+                  className="panel-details-preview-image"
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       ) : (

@@ -58,3 +58,17 @@ export function getObjectLeafletIcon(type) {
     iconAnchor: [16, 16],
   });
 }
+
+/**
+ * Returns the URL of the symbol preview image for the given symbol type.
+ */
+export function getObjectSymbolPreviewUrl(type) {
+  const normalizedType = normalizeSymbolType(type);
+
+  if (normalizedType === SYMBOL_TYPES.MARKER) {
+    return null;
+  }
+
+  const iconUrl = ICONS_BY_TYPE[normalizedType];
+  return iconUrl ?? null;
+}
