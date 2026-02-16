@@ -60,6 +60,32 @@ export default function MapDataTable({
     return "-";
   }
 
+  function isPolygonVertexRow(row) {
+    return row?.rowType === "PolygonVertex";
+  }
+
+  function isSamePolygonGroup(a, b) {
+    return (
+      isPolygonVertexRow(a) &&
+      isPolygonVertexRow(b) &&
+      a.groupId &&
+      b.groupId &&
+      a.groupId === b.groupId
+    );
+  }
+
+  function getPolygonGroupClass(row, preRow, nextRow) {
+    if (!isPolygonVertexRow(row)) return "";
+
+    const samePrev = isSamePolygonGroup(row, preRow);
+    const sameNext = isSamePolygonGroup(row, nextRow);
+
+    if (!samePrev && sameNext) return "poly-row poly-group-start";
+    if (samePrev && sameNext) return "poly-row poly-group-mid";
+    if (samePrev && !sameNext) return "poly-row poly-group-end";
+    return "poly-row poly-group-single";
+  }
+
   return (
     <div className="map-data-table-wrapper">
       <table className="map-data-table">
@@ -71,19 +97,29 @@ export default function MapDataTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr
-              key={getRowKey(row)}
-              onClick={() => onRowClick && onRowClick(row)}
-              className={
-                isRowSelected(row) ? "map-data-row selected" : "map-data-row"
-              }
-            >
-              <td>{getRowLabel(row)}</td>
-              <td>{formatCoordinate(row.latitude)}</td>
-              <td>{formatCoordinate(row.longitude)}</td>
-            </tr>
-          ))}
+          {rows.map((row, index) => {
+            const prevRow = index > 0 ? rows[index - 1] : null;
+            const nextRow = index < rows.length - 1 ? rows[index + 1] : null;
+
+            const polygonGroupClass = getPolygonGroupClass(
+              row,
+              prevRow,
+              nextRow,
+            );
+            const selectedClass = isRowSelected(row) ? "selected" : "";
+
+            return (
+              <tr
+                key={getRowKey(row)}
+                onClick={() => onRowClick && onRowClick(row)}
+                className={`map-data-row ${selectedClass} ${polygonGroupClass}`.trim()}
+              >
+                <td>{getRowLabel(row)}</td>
+                <td>{formatCoordinate(row.latitude)}</td>
+                <td>{formatCoordinate(row.longitude)}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
