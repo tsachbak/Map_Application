@@ -5,6 +5,7 @@ import {
   Polyline,
   Polygon,
   useMapEvents,
+  useMap,
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -12,6 +13,7 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { Fragment } from "react/jsx-runtime";
+import { useEffect } from "react";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -86,6 +88,29 @@ export default function MapView({
     return null;
   }
 
+  function MapAutoResize() {
+    const map = useMap();
+
+    useEffect(() => {
+      const t1 = setTimeout(() => map.invalidateSize(), 0);
+      const t2 = setTimeout(() => map.invalidateSize(), 150);
+
+      function handleResize() {
+        map.invalidateSize();
+      }
+
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        window.removeEventListener("resize", handleResize);
+      };
+    }, [map]);
+
+    return null;
+  }
+
   return (
     <MapContainer
       center={[31.7683, 35.2137]}
@@ -98,7 +123,7 @@ export default function MapView({
       />
 
       <MapClickHandler />
-
+      <MapAutoResize />
       {Array.isArray(savedPolygons)
         ? savedPolygons.map((poly) => (
             <Fragment key={poly.id}>

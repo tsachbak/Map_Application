@@ -1,19 +1,51 @@
+.app-root {
+  height: 100vh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-title {
+  margin: 16px 16px 0 16px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
 .layout-root {
+  display: 1;
+  min-height: 0;
   display: flex;
   gap: 16px;
   padding: 16px;
+  box-sizing: border-box;
 }
 
 .layout-map {
   flex: 1;
-  min-height: 600px;
-  border: 1px solid #ccc;
-  padding: 12px;
+  min-height: 0;
+  height: 100%;
+  border: 1px solid #d9dbe1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
 }
 
 .layout-side {
-  width: 500px;
+  width: 520px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow: hidden;
+}
+
+#root h1 {
+  margin: 16px 16px 0 16px;
+  font-size: 26px;
+  font-weight: 700;
 }

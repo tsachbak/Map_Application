@@ -69,8 +69,8 @@ export default function Layout() {
   }
 
   return (
-    <div>
-      <h1>Map Application</h1>
+    <div className="app-root">
+      <h1 className="app-title">Map Application</h1>
       <div className="layout-root">
         <div className="layout-map">
           <MapView
