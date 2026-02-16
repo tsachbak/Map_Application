@@ -9,6 +9,7 @@ export default function PanelActions({
   onSaveClick,
   onDeleteClick,
   deleteDisabled = false,
+  saveDisabled = false,
   addLabelOff = "Add",
   addLabelOn = "Stop Adding",
 }) {
@@ -28,7 +29,7 @@ export default function PanelActions({
         type="button"
         className="panel-actions-button"
         onClick={onSaveClick}
-        disabled={!onSaveClick}
+        disabled={!onSaveClick || saveDisabled}
       >
         Save
       </button>

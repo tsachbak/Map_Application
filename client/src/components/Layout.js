@@ -99,6 +99,7 @@ export default function Layout() {
                   if (!polygons.isDrawingPolygon) {
                     objects.stopAddMode();
                     objects.setSelectedSavedObject(null);
+                    polygons.setSelectedSavedPolygon(null);
                     polygons.startDrawMode();
                     return;
                   }
@@ -113,6 +114,9 @@ export default function Layout() {
                   await mapData.refresh();
                 }}
                 deleteDisabled={!polygons.selectedSavedPolygon?.id}
+                saveDisabled={
+                  !!polygons.selectedSavedPolygon || !polygons.isPolygonClosed
+                }
                 addLabelOff="Add"
                 addLabelOn="Stop"
               />
@@ -136,6 +140,8 @@ export default function Layout() {
                 onAddClick={() => {
                   if (!objects.isAddingObject) {
                     polygons.stopDrawMode();
+                    polygons.setSelectedSavedPolygon(null);
+                    objects.setSelectedSavedObject(null);
                   }
                   objects.toggleAddMode();
                 }}
@@ -150,6 +156,9 @@ export default function Layout() {
                   await mapData.refresh();
                 }}
                 deleteDisabled={!objects.selectedSavedObject?.id}
+                saveDisabled={
+                  !objects.draftObjects || objects.draftObjects.length === 0
+                }
                 addLabelOff="Add"
                 addLabelOn="Stop"
               />
