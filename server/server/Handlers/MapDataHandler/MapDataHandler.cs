@@ -1,4 +1,6 @@
 ﻿using server.Dtos.MapData;
+using server.Dtos.MapData.GeoJson;
+using server.Models;
 using server.Services.ObjectsService;
 using server.Services.PolygonsService;
 
@@ -77,6 +79,71 @@ namespace server.Handlers.MapDataHandler
             {
                 DeletedObjectsCount = deletedObjectsCount,
                 DeletedPolygonsCount = deletedPolygonsCount
+            };
+        }
+
+        public async Task<GeoJsonFeatureCollectionDto> ExportGeoJsonAsync(CancellationToken ct = default) 
+        {
+            var objects = await _objectsService.GetAllObjectsAsync(ct);
+            var polygons = await _polygonsService.GetAllPolygonsAsync(ct);
+
+            return BuildFeatureCollection(objects, polygons);
+        }
+
+        // Helper methods to build GeoJSON features
+        private static GeoJsonFeatureCollectionDto BuildFeatureCollection(
+            IReadOnlyList<MapObjectEntity> objects, 
+            IReadOnlyList<MapPolygonEntity> polygons)
+        {
+            var featureCollection = new GeoJsonFeatureCollectionDto();
+
+            if (objects != null)
+            {
+                foreach (var obj in objects)
+                {
+                    featureCollection.Features.Add(BuildObjectFeature(obj));
+                }
+            }
+
+            if (polygons != null)
+            {
+                foreach (var poly in polygons)
+                {
+                    featureCollection.Features.Add(BuildPolygonFeature(poly));
+                }
+            }
+
+            return featureCollection;
+        }
+
+        // Helper method to build a GeoJSON feature for a MapObjectEntity
+        private static GeoJsonFeatureDto BuildObjectFeature(MapObjectEntity obj)
+        {
+            return new GeoJsonFeatureDto
+            {
+                Geometry = obj.Location,
+                Properties = new Dictionary<string, object>
+                {
+                    ["entityType"] = "Object",
+                    ["id"] = obj.Id ?? string.Empty,
+                    ["object"] = obj.Object ?? string.Empty,
+                    ["type"] = obj.Type ?? "marker"
+                }
+            };
+        }
+
+        // Helper method to build a GeoJSON feature for a MapPolygonEntity
+        private static GeoJsonFeatureDto BuildPolygonFeature(MapPolygonEntity poly)
+        {
+            return new GeoJsonFeatureDto
+            {
+                Geometry = poly.Location,
+                Properties = new Dictionary<string, object>
+                {
+                    ["entityType"] = "Polygon",
+                    ["id"] = poly.Id ?? string.Empty,
+                    ["name"] = poly.Name ?? "polygon"
+                }
             };
         }
     }

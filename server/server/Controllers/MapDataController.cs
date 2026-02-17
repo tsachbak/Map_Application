@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using server.Handlers.MapDataHandler;
+using server.Utils;
 
 namespace server.Controllers
 {
@@ -31,6 +32,15 @@ namespace server.Controllers
             var result = await _mapDataHandler.ClearMapDataAsync(ct);
 
             return Ok(result);
+        }
+
+        [HttpGet("export-geojson")]
+        public async Task<IActionResult> ExportGeoJson(CancellationToken ct)
+        {
+            var featureCollection = await _mapDataHandler.ExportGeoJsonAsync(ct);
+            var bytes = GeoJsonFileSerializer.SerializeToUtf8Bytes(featureCollection);
+
+            return File(bytes, "application/geo+json", "map_data.geojson");
         }
     }
 }

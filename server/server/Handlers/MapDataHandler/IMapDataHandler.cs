@@ -1,4 +1,5 @@
 ﻿using server.Dtos.MapData;
+using server.Dtos.MapData.GeoJson;
 
 namespace server.Handlers.MapDataHandler
 {
@@ -16,5 +17,10 @@ namespace server.Handlers.MapDataHandler
         /// Clears all map data (Objects and Polygons) from the database and returns a summary of the deleted data.
         /// </summary>
         Task<ClearMapResponseDto> ClearMapDataAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Export all map data (Objects and Polygons) as a GeoJSON FeatureCollection, which can be used for GIS applications or data exchange.
+        /// </summary>
+        Task<GeoJsonFeatureCollectionDto> ExportGeoJsonAsync(CancellationToken ct = default);
     }
 }
