@@ -113,6 +113,53 @@ export default function MapView({
     return null;
   }
 
+  function MapSelectionFocus({
+    savedObjects,
+    savedPolygons,
+    selectedSavedObjectId,
+    selectedSavedPolygonId,
+  }) {
+    const map = useMap();
+
+    useEffect(() => {
+      if (!map) return;
+
+      if (selectedSavedObjectId) {
+        const obj = (savedObjects ?? []).find(
+          (o) => o.id === selectedSavedObjectId,
+        );
+        if (!obj) return;
+
+        map.flyTo([obj.lat, obj.lng], Math.max(map.getZoom(), 8), {
+          duration: 0.7,
+        });
+        return;
+      }
+
+      if (selectedSavedPolygonId) {
+        const poly = (savedPolygons ?? []).find(
+          (p) => p.id === selectedSavedPolygonId,
+        );
+        if (!poly?.points?.length) return;
+
+        const bounds = L.latLngBounds(poly.points.map((p) => [p.lat, p.lng]));
+        map.fitBounds(bounds, {
+          padding: [40, 40],
+          maxZoom: 6,
+          duration: 0.7,
+        });
+      }
+    }, [
+      map,
+      savedObjects,
+      savedPolygons,
+      selectedSavedObjectId,
+      selectedSavedPolygonId,
+    ]);
+
+    return null;
+  }
+
   function resolveObjectIcon(objType, { isSelected = false, isDraft = false }) {
     const type = String(objType ?? "marker").toLowerCase();
 
@@ -138,6 +185,12 @@ export default function MapView({
 
       <MapClickHandler />
       <MapAutoResize />
+      <MapSelectionFocus
+        savedObjects={savedObjects}
+        savedPolygons={savedPolygons}
+        selectedSavedObjectId={selectedSavedObjectId}
+        selectedSavedPolygonId={selectedSavedPolygonId}
+      />
       {Array.isArray(savedPolygons)
         ? savedPolygons.map((poly) => (
             <Fragment key={poly.id}>
