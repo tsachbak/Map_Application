@@ -90,7 +90,7 @@ namespace server.Handlers.MapDataHandler
             return BuildFeatureCollection(objects, polygons);
         }
 
-        // Helper methods to build GeoJSON features
+        // Merge object and polygon entities into one GeoJSON feature collection.
         private static GeoJsonFeatureCollectionDto BuildFeatureCollection(
             IReadOnlyList<MapObjectEntity> objects, 
             IReadOnlyList<MapPolygonEntity> polygons)
@@ -116,7 +116,6 @@ namespace server.Handlers.MapDataHandler
             return featureCollection;
         }
 
-        // Helper method to build a GeoJSON feature for a MapObjectEntity
         private static GeoJsonFeatureDto BuildObjectFeature(MapObjectEntity obj)
         {
             return new GeoJsonFeatureDto
@@ -132,7 +131,6 @@ namespace server.Handlers.MapDataHandler
             };
         }
 
-        // Helper method to build a GeoJSON feature for a MapPolygonEntity
         private static GeoJsonFeatureDto BuildPolygonFeature(MapPolygonEntity poly)
         {
             return new GeoJsonFeatureDto

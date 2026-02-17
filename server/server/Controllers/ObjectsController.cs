@@ -6,7 +6,7 @@ using server.Services.ObjectsService;
 namespace server.Controllers
 {
     /// <summary>
-    /// ObjectsController handles API requests related to Map Objects.
+    /// Exposes CRUD endpoints for map objects.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -24,6 +24,7 @@ namespace server.Controllers
         {
             var objects = await _objectsService.GetAllObjectsAsync(ct);
 
+            // GeoJSON points are stored as [longitude, latitude].
             var dtos = objects.Select(o => new GetObjectResponseDto
             {
                 Id = o.Id,

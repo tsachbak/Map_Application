@@ -1,8 +1,7 @@
 /**
- * Display label utilities for map objects and polygons shown in the MapDataTable.
+ * Label helpers for objects/polygons displayed in panel and table views.
  */
 
-/// Builds a Map of ID to display label for the given items and prefix.
 export function buildLabelMap(items = [], prefix) {
   const map = new Map();
   if (!Array.isArray(items)) return map;
@@ -15,17 +14,14 @@ export function buildLabelMap(items = [], prefix) {
   return map;
 }
 
-/// Gets the display label for an object by its ID using the provided label map.
 export function getObjectDisplayLabelById(id, objectLabelsById) {
   return objectLabelsById.get(id) ?? "Object";
 }
 
-/// Gets the display label for a polygon by its ID using the provided label map.
 export function getPolygonDisplayLabelById(id, polygonLabelsById) {
   return polygonLabelsById.get(id) ?? "Polygon";
 }
 
-/// Gets the display label for a map data row based on its type and associated label maps.
 export function getRowDisplayLabel(row, objectLabelsById, polygonLabelsById) {
   if (!row) return "";
 

@@ -1,34 +1,31 @@
 ﻿namespace server.Dtos.MapData
 {
     /// <summary>
-    /// Represents a row of single map data point (could be Object or Polygon vertex)
+    /// Flattened map-data row (object point or polygon vertex).
     /// </summary>
     public sealed class MapDataRowDto
     {
         /// <summary>
-        /// RowType can be "Object" or "PolygonVertex"
+        /// "Object" or "PolygonVertex".
         /// </summary>
         public string RowType { get; set; } = string.Empty;
-        /// <summary>
-        /// Latitude
-        /// </summary>
+
         public double Latitude { get; set; }
-        /// <summary>
-        /// Longitude
-        /// </summary>
+
         public double Longitude { get; set; }
+
         /// <summary>
-        /// The Id of the source entity:
-        /// - For Objects: the ObjectId
-        /// - For Polygon Vertices: PolygonId only
+        /// Source entity ID (object ID or polygon ID).
         /// </summary>
         public string SourceId { get; set; } = string.Empty;
+
         /// <summary>
-        /// Grouping Id to group vertices of the same polygon together, only applicable for PolygonVertex RowType
+        /// Polygon grouping ID, used only for "PolygonVertex" rows.
         /// </summary>
         public string? GroupId { get; set; }
+
         /// <summary>
-        /// Vertex index within the polygon ring (only for polygonVertex)
+        /// Vertex index within the polygon ring (only for "PolygonVertex").
         /// </summary>
         public int? VertexIndex { get; set; }
     }

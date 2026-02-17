@@ -1,7 +1,7 @@
 ﻿namespace server.Settings
 {
     /// <summary>
-    /// MongoSettings represents the configuration settings required to connect to a MongoDB database.
+    /// MongoDB connection and database configuration.
     /// </summary>
     public sealed class MongoSettings
     {

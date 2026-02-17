@@ -14,14 +14,10 @@ namespace server
 
             var allowedOriginsPolicyName = "ClientCors";
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            // Configure MongoSettings using the "Mongo" section of the configuration
             builder.Services.Configure<MongoSettings>(
                 builder.Configuration.GetSection("Mongo"));
 
@@ -43,7 +39,6 @@ namespace server
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

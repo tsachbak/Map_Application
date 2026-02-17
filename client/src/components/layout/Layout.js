@@ -19,8 +19,7 @@ import useMapData from "../../features/mapData/useMapData";
 import useGlobalMapActions from "../../features/mapData/useGlobalMapActions";
 
 /**
- * this component will be the main layout of the application,
- * containing the map and the panels for polygons, objects, and map data (as table).
+ * Main application layout: map canvas plus polygons, objects, and map-data panels.
  */
 export default function Layout() {
   const objects = useObjects();

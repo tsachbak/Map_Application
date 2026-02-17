@@ -1,7 +1,7 @@
 ﻿namespace server.Dtos.Polygons
 {
     /// <summary>
-    /// Represents a single point (vertex) of a polygon received from the client.
+    /// Latitude/longitude vertex provided for polygon creation.
     /// </summary>
     public sealed class PolygonPointDto
     {

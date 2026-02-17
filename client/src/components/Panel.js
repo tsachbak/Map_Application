@@ -1,8 +1,7 @@
 import "./Panel.css";
 
 /**
- * this component is a simple wrapper for a section of the UI.
- * It provides a title, an optional set of actions, and a container for child components.
+ * Reusable panel wrapper with a title, optional action slot, and content area.
  */
 export default function Panel({ title, actions, children }) {
   return (

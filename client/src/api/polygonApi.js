@@ -1,16 +1,11 @@
 import { get, post, del } from "./httpClient";
 
-/**
- * Fetches the saved polygons from the backend.
- */
 export function getPolygons() {
   return get("/polygons");
 }
 
-/**
- * Saves a polygon to the backend.
- */
 export function savePolygon(polygon) {
+  // Convert leaflet-style points to the DTO expected by the API.
   const payload = {
     name: polygon.name ?? "polygon",
     points: (polygon.points ?? []).map((p) => ({
@@ -21,9 +16,6 @@ export function savePolygon(polygon) {
   return post("/polygons/save", payload);
 }
 
-/**
- * Deletes a polygon from the backend.
- */
 export function deletePolygon(id) {
   return del(`/polygons/${id}`);
 }

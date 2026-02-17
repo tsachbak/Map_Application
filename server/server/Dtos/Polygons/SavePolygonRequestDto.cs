@@ -1,7 +1,7 @@
 ﻿namespace server.Dtos.Polygons
 {
     /// <summary>
-    /// Request the request body for saving a polygon.
+    /// Request payload for saving a polygon.
     /// </summary>
     public sealed class SavePolygonRequestDto
     {

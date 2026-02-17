@@ -1,7 +1,7 @@
 ﻿namespace server.Dtos.MapData.GeoJson
 {
     /// <summary>
-    /// GeoJSON FeatureCollection DTO, which represents a collection of GeoJSON features.
+    /// GeoJSON FeatureCollection containing multiple features.
     /// </summary>
     public sealed class GeoJsonFeatureCollectionDto
     {

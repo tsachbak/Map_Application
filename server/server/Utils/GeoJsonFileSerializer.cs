@@ -4,7 +4,7 @@ using System.Text.Json;
 namespace server.Utils
 {
     /// <summary>
-    /// Serializes on object into a GeoJSON file format.
+    /// Serializes an object to UTF-8 JSON bytes for GeoJSON downloads.
     /// </summary>
     public static class GeoJsonFileSerializer
     {

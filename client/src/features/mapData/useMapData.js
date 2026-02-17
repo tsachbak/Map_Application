@@ -2,15 +2,13 @@ import { useEffect, useState, useCallback } from "react";
 import { getMapData } from "../../api/mapDataApi";
 
 /**
- * Custom hook to manage map data fetching and state.
- * It provides the fetched rows, loading and error states, and selection management for objects and polygons.
+ * Fetches map data rows and exposes loading/error state with a `refresh` action.
  */
 export default function useMapData() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Function to load map data from the server
   const load = useCallback(async () => {
     try {
       setLoading(true);

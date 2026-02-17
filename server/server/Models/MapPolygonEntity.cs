@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace server.Models
 {
     /// <summary>
-    /// Represents a map polygon entity with an ID, name, and location.
+    /// Persisted polygon entity with name and GeoJSON location.
     /// </summary>
     public sealed class MapPolygonEntity
     {

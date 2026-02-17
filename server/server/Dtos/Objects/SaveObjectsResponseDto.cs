@@ -3,7 +3,7 @@
 namespace server.Dtos.Objects
 {
     /// <summary>
-    /// Response DTO for saving map objects.
+    /// Response payload for saving map objects.
     /// </summary>
     public sealed class SaveObjectsResponseDto
     {

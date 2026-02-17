@@ -17,7 +17,7 @@ namespace server.Services.ObjectsService
         {
             if (request?.Objects == null || request.Objects.Count == 0)
             {
-                return 0; // No objects to save
+                return 0;
             }
 
             var entities = request.Objects.Select(o => new MapObjectEntity
@@ -48,7 +48,7 @@ namespace server.Services.ObjectsService
         public async Task<bool> DeleteObjectAsync(string id, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(id))
-                return false; // Invalid ID
+                return false;
 
             var filter = Builders<MapObjectEntity>.Filter.Eq(o => o.Id, id);
 

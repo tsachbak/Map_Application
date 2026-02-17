@@ -3,7 +3,7 @@
 namespace server.Models
 {
     /// <summary>
-    /// GeoJSON Point structure representing a geographic point with a specific type and coordinates.
+    /// GeoJSON Point model with [longitude, latitude] coordinates.
     /// </summary>
     public sealed class GeoJsonPoint
     {

@@ -6,7 +6,7 @@ using server.Services.PolygonsService;
 namespace server.Controllers
 {
     /// <summary>
-    /// PolygonsController handles API requests related to Map Polygons.
+    /// Exposes CRUD endpoints for map polygons.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]

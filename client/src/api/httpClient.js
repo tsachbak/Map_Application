@@ -1,8 +1,6 @@
 import { API_BASE_URL } from "../config/apiConfig";
 
-/**
- * GET request to the specified path.
- */
+// Lightweight API client shared by feature-specific API modules.
 export async function get(path) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "GET",
@@ -17,9 +15,6 @@ export async function get(path) {
   return response.json();
 }
 
-/**
- * POST request to the specified path with the provided data.
- */
 export async function post(path, data) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "POST",
@@ -38,9 +33,6 @@ export async function post(path, data) {
   return response.json();
 }
 
-/**
- * DELETE request to the specified path.
- */
 export async function del(path) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "DELETE",
@@ -60,9 +52,6 @@ export async function del(path) {
   return response.json();
 }
 
-/**
- * Downloads a file from the specified path and returns the blob and filename.
- */
 export async function download(path) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "GET",

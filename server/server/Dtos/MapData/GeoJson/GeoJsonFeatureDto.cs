@@ -1,8 +1,7 @@
 ﻿namespace server.Dtos.MapData.GeoJson
 {
     /// <summary>
-    /// Represents a GeoJSON Feature object, containing geometry and associated properties, as defined by the GeoJSON
-    /// specification.
+    /// GeoJSON Feature with geometry and metadata properties.
     /// </summary>
     public sealed class GeoJsonFeatureDto
     {

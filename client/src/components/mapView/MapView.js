@@ -26,7 +26,7 @@ L.Icon.Default.mergeOptions({
 });
 
 /**
- * MapView component renders an interactive map using react-leaflet.
+ * Renders the interactive Leaflet map and all object/polygon overlays.
  */
 export default function MapView({
   savedObjects = [],
@@ -94,6 +94,7 @@ export default function MapView({
     const map = useMap();
 
     useEffect(() => {
+      // Double invalidate helps when container sizing settles after initial mount/layout.
       const t1 = setTimeout(() => map.invalidateSize(), 0);
       const t2 = setTimeout(() => map.invalidateSize(), 150);
 

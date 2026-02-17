@@ -6,7 +6,7 @@ using server.Utils;
 namespace server.Controllers
 {
     /// <summary>
-    /// MapDataController handles API requests related to Map Data.
+    /// Exposes map-data endpoints (rows, clear-all, GeoJSON export).
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]

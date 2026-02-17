@@ -1,6 +1,6 @@
 /**
- * Saves a blob to disk using the namtive "save as" dialog.
- * Fallback to a normal download if the File System Access API is not supported.
+ * Saves a blob using the native Save As dialog when available.
+ * Falls back to a regular download when the File System Access API is unavailable.
  */
 export async function saveBlobAs(blob, suggestedFileName, mimeType) {
   if (window.showSaveFilePicker) {

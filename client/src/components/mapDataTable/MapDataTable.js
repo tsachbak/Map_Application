@@ -1,8 +1,6 @@
 import "./MapDataTable.css";
 
-/***
- * MapDataTable.js
- */
+// Displays map data rows and groups polygon-vertex rows for clearer scanning.
 export default function MapDataTable({
   rows = [],
   loading = false,

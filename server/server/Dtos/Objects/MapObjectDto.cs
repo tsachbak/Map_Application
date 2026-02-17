@@ -3,7 +3,7 @@
 namespace server.Dtos.Objects
 {
     /// <summary>
-    /// Represents a single map object (marker/symbol) recieved from the client.
+    /// Request payload for a single map object sent by the client.
     /// </summary>
     public sealed class MapObjectDto
     {
@@ -17,8 +17,7 @@ namespace server.Dtos.Objects
         public double Longitude { get; set; }
 
         /// <summary>
-        /// Expected values: "marker" or "symbol".
-        /// Determines how the object should be rendered on the map.
+        /// Object render type (for example: marker, jeep, ship, airplane).
         /// </summary>
         [JsonPropertyName("type")]
         public string Type { get; set; } = "marker";

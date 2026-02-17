@@ -5,7 +5,7 @@ import shipPng from "../../assets/symbols/ship.png";
 import airPlanPng from "../../assets/symbols/airplane.png";
 
 /**
- * Defines symbol types and provides utility functions for handling map symbols.
+ * Symbol type constants and icon helpers for map objects.
  */
 export const SYMBOL_TYPES = Object.freeze({
   MARKER: "marker",
@@ -22,7 +22,7 @@ export const SYMBOL_TYPE_OPTIONS = Object.freeze([
 ]);
 
 /**
- * Normalizes the given symbol type to a valid symbol type.
+ * Normalizes unknown input to one of the supported symbol types.
  */
 export function normalizeSymbolType(type) {
   const value = String(type ?? "")
@@ -38,7 +38,7 @@ const ICONS_BY_TYPE = Object.freeze({
 });
 
 /**
- * Returns a Leaflet icon for the given symbol type, or null if the type is "marker" or unrecognized.
+ * Returns a Leaflet icon for non-marker symbol types.
  */
 export function getObjectLeafletIcon(type) {
   const normalizedType = normalizeSymbolType(type);
@@ -60,7 +60,7 @@ export function getObjectLeafletIcon(type) {
 }
 
 /**
- * Returns the URL of the symbol preview image for the given symbol type.
+ * Returns the preview image URL for non-marker symbol types.
  */
 export function getObjectSymbolPreviewUrl(type) {
   const normalizedType = normalizeSymbolType(type);

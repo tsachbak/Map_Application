@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getPolygons, savePolygon, deletePolygon } from "../../api/polygonApi";
 
 /**
- * usePolygons is a custom hook that manages the state and operations related to polygons on the map.
+ * Manages drawing, persisting, selecting, and deleting map polygons.
  */
 export default function usePolygons() {
   const [isDrawingPolygon, setIsDrawingPolygon] = useState(false);
@@ -11,7 +11,6 @@ export default function usePolygons() {
   const [savedPolygons, setSavedPolygons] = useState([]);
   const [selectedSavedPolygon, setSelectedSavedPolygon] = useState(null);
 
-  // Toggles the draw mode for polygons.
   function toggleDrawMode() {
     if (isDrawingPolygon) {
       stopDrawMode();
@@ -20,39 +19,33 @@ export default function usePolygons() {
     startDrawMode();
   }
 
-  // Add a new point to the current draft polygon.
   function addPoint(lat, lng) {
     setDraftPolygonPoints((prev) => [...prev, { lat, lng }]);
   }
 
-  // Closes the current polygon by marking it as closed and exiting draw mode.
   function closePolygon() {
     setIsPolygonClosed(true);
     setIsDrawingPolygon(false);
   }
 
-  // Resets the draft polygon state, clearing all points and exiting draw mode.
   function resetDraft() {
     setIsDrawingPolygon(false);
     setIsPolygonClosed(false);
     setDraftPolygonPoints([]);
   }
 
-  // Starts the draw mode for creating a new polygon.
   function startDrawMode() {
     setIsPolygonClosed(false);
     setDraftPolygonPoints([]);
     setIsDrawingPolygon(true);
   }
 
-  // Stops the draw mode and resets the draft polygon state.
   function stopDrawMode() {
     setIsDrawingPolygon(false);
     setDraftPolygonPoints([]);
     setIsPolygonClosed(false);
   }
 
-  // Saves the closed polygon to the backend and resets the draft state.
   async function saveClosedPolygonAsync() {
     if (!isPolygonClosed || draftPolygonPoints.length < 3) return;
 
@@ -91,15 +84,16 @@ export default function usePolygons() {
     }
   }
 
-  // Loads the saved polygons from the backend and updates the state.
   async function loadPolygons() {
     try {
       const data = await getPolygons();
 
       const mapped = (data ?? [])
         .map((p) => {
+          // Backend stores GeoJSON polygon coordinates as [lng, lat] rings.
           const ring = p?.location?.coordinates?.[0];
 
+          // Ignore invalid polygons; a closed ring needs at least 4 coordinates.
           if (!Array.isArray(ring) || ring.length < 4) return null;
 
           const points = ring.map((coord) => ({
@@ -121,7 +115,6 @@ export default function usePolygons() {
     }
   }
 
-  // Selects a saved polygon by its ID and updates the selected state.
   function selectSavedPolygonById(id) {
     const polygon = savedPolygons.find((p) => p.id === id) ?? null;
     setSelectedSavedPolygon(polygon);

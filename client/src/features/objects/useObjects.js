@@ -3,7 +3,7 @@ import { getObjects, saveObjects, deleteObject } from "../../api/objectsApi";
 import { SYMBOL_TYPES } from "./symbolLibrary";
 
 /**
- * useObjects is a custom hook that manages the state and operations related to map objects.
+ * Manages saved map objects, draft objects, and related CRUD actions.
  */
 export default function useObjects() {
   const [savedObjects, setSavedObjects] = useState([]);
@@ -14,11 +14,11 @@ export default function useObjects() {
     SYMBOL_TYPES.MARKER,
   );
 
-  /// Loads the saved objects from the backend and updates the state.
   async function loadObjects() {
     try {
       const data = await getObjects();
 
+      // Normalize backend DTOs into the shape expected by map/UI components.
       const mapped = (data ?? [])
         .map((o) => {
           if (!o?.id) return null;
@@ -39,7 +39,6 @@ export default function useObjects() {
     }
   }
 
-  // Saves the draft objects to the backend and refreshes the saved objects list.
   async function saveDraftObjectsAsync() {
     if (draftObjects.length === 0) return;
 
@@ -57,7 +56,6 @@ export default function useObjects() {
     }
   }
 
-  // Deletes the object with the specified ID and refreshes the saved objects list.
   async function deleteObjectByIdAsync(id) {
     if (!id) return;
 
@@ -74,8 +72,8 @@ export default function useObjects() {
     }
   }
 
-  // Adds a new draft object with the specified latitude and longitude.
   function addDraftObject(lat, lng) {
+    // Local temporary ID is enough until objects are persisted and receive server IDs.
     const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
     setDraftObjects((prev) => [
@@ -89,18 +87,17 @@ export default function useObjects() {
     ]);
   }
 
-  // Selects a saved object by its ID and updates the selectedSavedObject state.
   function selectSavedObjectById(id) {
     const object = savedObjects.find((o) => o.id === id) ?? null;
     setSelectedSavedObject(object);
   }
 
-  // Toggles the add object mode. If turning off, it also clears any draft objects.
   function toggleAddMode() {
     setIsAddingObject((prev) => {
       const next = !prev;
 
       if (!next) {
+        // Leaving add mode discards unfinished drafts to avoid stale map markers.
         setDraftObjects([]);
       }
 
@@ -108,13 +105,11 @@ export default function useObjects() {
     });
   }
 
-  // Stops the add object mode and clears any draft objects.
   function stopAddMode() {
     setIsAddingObject(false);
     setDraftObjects([]);
   }
 
-  // Load saved objects on initial render.
   useEffect(() => {
     loadObjects();
   }, []);

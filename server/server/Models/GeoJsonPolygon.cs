@@ -3,7 +3,7 @@
 namespace server.Models
 {
     /// <summary>
-    /// GeoJSON Polygon structure: represents a polygon with a specific type and coordinates.
+    /// GeoJSON Polygon model with one or more coordinate rings.
     /// </summary>
     public sealed class GeoJsonPolygon
     {

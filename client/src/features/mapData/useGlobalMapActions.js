@@ -2,10 +2,9 @@ import { clearAllMapData, exportMapDataGeoJson } from "../../api/mapDataApi";
 import { saveBlobAs } from "../../utils/fileSave";
 
 /**
- * useGlobalMapActions orchestrates global actions related to map data.
+ * Coordinates global export/clear actions across objects, polygons, and map-data state.
  */
 export default function useGlobalMapActions({ objects, polygons, mapData }) {
-  /// Export map data as GeoJSON file
   async function exportGeoJsonAsync() {
     try {
       const { blob, fileName } = await exportMapDataGeoJson();
@@ -21,7 +20,6 @@ export default function useGlobalMapActions({ objects, polygons, mapData }) {
     }
   }
 
-  /// Clear all map data with confirmation
   async function clearAllDataAsync() {
     const confirmed = window.confirm(
       "Are you sure you want to clear all map data? This action cannot be undone.",
@@ -31,6 +29,7 @@ export default function useGlobalMapActions({ objects, polygons, mapData }) {
     try {
       await clearAllMapData();
 
+      // Reset local UI state first to avoid showing stale selections during refresh.
       objects.setSelectedSavedObject(null);
       objects.setDraftObjects([]);
       objects.setIsAddingObject(false);

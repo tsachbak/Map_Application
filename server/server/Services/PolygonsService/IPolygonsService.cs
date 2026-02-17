@@ -4,28 +4,27 @@ using server.Models;
 namespace server.Services.PolygonsService
 {
     /// <summary>
-    /// Defines the contract for the PolygonsService, which handles business logic related to Polygons.
+    /// Contract for polygon persistence operations.
     /// </summary>
     public interface IPolygonsService
     {
         /// <summary>
-        /// Saves a polygon to the database and returns its ID.
+        /// Saves a polygon and returns its ID.
         /// </summary>
         Task<string?> SavePolygonAsync(SavePolygonRequestDto request, CancellationToken ct = default);
 
         /// <summary>
-        /// Get all polygons from the database and return them as a list of MapPolygonEntity objects.
+        /// Returns all saved polygons.
         /// </summary>
         Task<IReadOnlyList<MapPolygonEntity>> GetAllPolygonsAsync(CancellationToken ct = default);
 
         /// <summary>
-        /// Deletes a polygon from the database by its ID.
-        /// Returns true if the polygon was successfully deleted, or false if the polygon was not found or the ID was invalid.
+        /// Deletes one polygon by ID.
         /// </summary>
         Task<bool> DeletePolygonAsync(string id, CancellationToken ct = default);
 
         /// <summary>
-        /// Asynchronously deletes all polygons from the data store and returns the count of deleted polygons.
+        /// Deletes all polygons and returns the deleted count.
         /// </summary>
         Task<long> DeleteAllPolygonsAsync(CancellationToken ct = default);
     }

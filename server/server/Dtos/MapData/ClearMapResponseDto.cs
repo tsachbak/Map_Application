@@ -1,7 +1,7 @@
 ﻿namespace server.Dtos.MapData
 {
     /// <summary>
-    /// Response DTO for clearing all map data.
+    /// Response payload for the clear-all map-data operation.
     /// </summary>
     public sealed class ClearMapResponseDto
     {

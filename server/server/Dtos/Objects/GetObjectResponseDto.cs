@@ -1,7 +1,7 @@
 ﻿namespace server.Dtos.Objects
 {
     /// <summary>
-    /// Response DTO for a single Map Object returned from the API.
+    /// Response payload for a saved map object.
     /// </summary>
     public sealed class GetObjectResponseDto
     {

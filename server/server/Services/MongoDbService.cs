@@ -6,8 +6,7 @@ using server.Settings;
 namespace server.Services
 {
     /// <summary>
-    /// Mongo DB Service.
-    /// Establishes a connection to the MongoDB database and provides access to the collections used by the application.
+    /// Creates MongoDB collections and ensures required geospatial indexes exist.
     /// </summary>
     public sealed class MongoDbService
     {
@@ -33,7 +32,7 @@ namespace server.Services
             EnsureGeoIndexes();
         }
 
-        // Ensure that the geospatial index on the Location field is created when the service is initialized
+        // Create 2dsphere indexes used by map queries on object/polygon locations.
         private void EnsureGeoIndexes()
         {
             try
@@ -53,7 +52,7 @@ namespace server.Services
             catch (MongoCommandException ex)
             {
                 if (!ex.Message.Contains("already exists", StringComparison.OrdinalIgnoreCase))
-                    throw; // Rethrow if it's a different error
+                    throw;
             }
         }
     }

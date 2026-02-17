@@ -3,8 +3,7 @@
 namespace server.Dtos.Objects
 {
     /// <summary>
-    /// Request DTO for saving map objects.
-    /// Contains a list of MapObjectDto.
+    /// Request payload for saving multiple map objects.
     /// </summary>
     public sealed class SaveObjectsRequestDto
     {

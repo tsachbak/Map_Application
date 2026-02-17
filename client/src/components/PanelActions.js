@@ -1,7 +1,7 @@
 import "./PanelActions.css";
 
 /**
- * PanelActions component provides buttons for adding, saving, and deleting items in the panel.
+ * Shared add/save/delete action buttons used by side panels.
  */
 export default function PanelActions({
   addActive,

@@ -16,14 +16,14 @@ namespace server.Services.PolygonsService
         public async Task<string?> SavePolygonAsync(SavePolygonRequestDto request, CancellationToken ct = default)
         {
             if (request?.Points == null || request.Points.Count < 3)
-                return null; // A polygon must have at least 3 points
+                return null;
 
-            // Build the linear ring for the polygon
+            // GeoJSON polygon ring uses [longitude, latitude] coordinates.
             var ring = request.Points
                 .Select(p => new[] { p.Longitude, p.Latitude })
                 .ToList();
 
-            // Ensure the ring is closed by checking if the first and last points are the same
+            // Close the ring when the first and last coordinates are different.
             var firstPoint = ring[0];
             var lastPoint = ring[ring.Count - 1];
             if (firstPoint[0] != lastPoint[0] || firstPoint[1] != lastPoint[1])
