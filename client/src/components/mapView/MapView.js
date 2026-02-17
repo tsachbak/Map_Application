@@ -15,7 +15,7 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { Fragment } from "react/jsx-runtime";
 import { useEffect } from "react";
-import { getObjectLeafletIcon } from "../features/objects/symbolLibrary";
+import { getObjectLeafletIcon } from "../../features/objects/symbolLibrary";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
