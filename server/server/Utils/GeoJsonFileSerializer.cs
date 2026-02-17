@@ -8,11 +8,11 @@ namespace server.Utils
     /// </summary>
     public static class GeoJsonFileSerializer
     {
-        public static byte[] SerializeToUtf8Bytes(object value, bool indented = false)
+        public static byte[] SerializeToUtf8Bytes(object value)
         {
             var json = JsonSerializer.Serialize(value, new JsonSerializerOptions
             {
-                WriteIndented = indented,
+                WriteIndented = true,
             });
 
             return Encoding.UTF8.GetBytes(json);
