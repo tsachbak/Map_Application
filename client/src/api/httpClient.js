@@ -59,3 +59,25 @@ export async function del(path) {
 
   return response.json();
 }
+
+/**
+ * Downloads a file from the specified path and returns the blob and filename.
+ */
+export async function download(path) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `File download failed: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const blob = await response.blob();
+  const contentDisposition = response.headers.get("Content-Disposition") ?? "";
+  const match = contentDisposition.match(/filename="?([^"]+)"?/i);
+  const fileName = match?.[1] ?? "map_data.geojson";
+
+  return { blob, fileName };
+}

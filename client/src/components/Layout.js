@@ -4,13 +4,14 @@ import MapView from "./MapView";
 import MapDataTable from "./MapDataTable";
 import PolygonsPanelContent from "./panels/PolygonsPanelContent";
 import ObjectsPanelContent from "./panels/ObjectsPanelContent";
-import { clearAllMapData } from "../api/MapDataApi";
+import { clearAllMapData, exportMapDataGeoJson } from "../api/mapDataApi";
 import {
   buildLabelMap,
   getObjectDisplayLabelById,
   getPolygonDisplayLabelById,
   getRowDisplayLabel,
 } from "../utils/displayLabels";
+import { saveBlobAs } from "../utils/fileSave";
 import "./Layout.css";
 
 import useObjects from "../features/objects/useObjects";
@@ -73,6 +74,25 @@ export default function Layout() {
     <div className="app-root">
       <div className="app-header">
         <h1 className="app-title">Map Application</h1>
+        <button
+          className="danger-button"
+          type="button"
+          onClick={async () => {
+            try {
+              const { blob, fileName } = await exportMapDataGeoJson();
+              await saveBlobAs(
+                blob,
+                fileName || "map_data.geojson",
+                "application/geo+json",
+              );
+            } catch (error) {
+              console.error("[Layout] Failed to export map data:", error);
+              alert(error.message);
+            }
+          }}
+        >
+          Export Map Data
+        </button>
         <button
           className="danger-button"
           type="button"

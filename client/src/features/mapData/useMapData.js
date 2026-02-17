@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { getMapData } from "../../api/MapDataApi";
+import { getMapData } from "../../api/mapDataApi";
 
 /**
  * Custom hook to manage map data fetching and state.
