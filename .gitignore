@@ -23,6 +23,7 @@ client/build
 
 # Rider / VS / VSCode
 .vs/
+.vscode/
 .idea/
 *.swp
 
