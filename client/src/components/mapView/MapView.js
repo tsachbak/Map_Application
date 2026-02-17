@@ -15,7 +15,11 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { Fragment } from "react/jsx-runtime";
 import { useEffect } from "react";
-import { getObjectLeafletIcon } from "../../features/objects/symbolLibrary";
+import {
+  getDraftVertexMarkerIcon,
+  getVertexMarkerIcon,
+  resolveObjectLeafletIcon,
+} from "../../features/objects/symbolLibrary";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -41,42 +45,8 @@ export default function MapView({
   selectedSavedPolygonId,
   selectedSavedObjectId,
 }) {
-  const defaultIcon = new L.Icon.Default();
-  const draftIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  });
-
-  const draftVertexIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [18, 30],
-    iconAnchor: [9, 30],
-  });
-
-  const vertexIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [18, 30],
-    iconAnchor: [9, 30],
-  });
-
-  const selectedObjectIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  });
+  const draftVertexIcon = getDraftVertexMarkerIcon();
+  const vertexIcon = getVertexMarkerIcon();
 
   function MapClickHandler() {
     useMapEvents({
@@ -159,18 +129,6 @@ export default function MapView({
     ]);
 
     return null;
-  }
-
-  function resolveObjectIcon(objType, { isSelected = false, isDraft = false }) {
-    const type = String(objType ?? "marker").toLowerCase();
-
-    if (type === "marker") {
-      if (isDraft) return draftIcon;
-      if (isSelected) return selectedObjectIcon;
-      return defaultIcon;
-    }
-
-    return getObjectLeafletIcon(type) ?? defaultIcon;
   }
 
   return (
@@ -271,7 +229,7 @@ export default function MapView({
             ) : null}
             <Marker
               position={[obj.lat, obj.lng]}
-              icon={resolveObjectIcon(obj.type, { isSelected })}
+              icon={resolveObjectLeafletIcon(obj.type, { isSelected })}
               eventHandlers={{
                 click: () => {
                   if (!onSavedMarkerClick) return;
@@ -287,7 +245,7 @@ export default function MapView({
         <Marker
           key={obj.id}
           position={[obj.lat, obj.lng]}
-          icon={resolveObjectIcon(obj.type, { isDraft: true })}
+          icon={resolveObjectLeafletIcon(obj.type, { isDraft: true })}
         />
       ))}
     </MapContainer>
